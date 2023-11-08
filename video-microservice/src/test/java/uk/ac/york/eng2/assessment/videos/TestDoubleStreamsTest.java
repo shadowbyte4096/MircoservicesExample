@@ -58,7 +58,7 @@ public class TestDoubleStreamsTest {
 				serdeRegistry.getDeserializer(WindowedIdentifier.class),
 				new LongDeserializer());
 
-			List<KeyValue<WindowedIdentifier, Long>> keyValues = outputTopic.watchKeyValuesToList();
+			List<KeyValue<WindowedIdentifier, Long>> keyValues = outputTopic.readKeyValuesToList();
 			assertFalse(keyValues.isEmpty());
 
 			KeyValue<WindowedIdentifier, Long> lastKeyValue = keyValues.get(keyValues.size() - 1);
