@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,8 +25,8 @@ public class User {
 	private String username;
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "watchers")
-	private Set<Video> watchedVideos;
+	@OneToMany
+	private Set<Reaction> reactions;
 
 	public Long getId() {
 		return id;
@@ -43,12 +44,12 @@ public class User {
 		this.username = username;
 	}
 
-	public Set<Video> getWatchedVideos() {
-		return watchedVideos;
+	public Set<Reaction> getReactions() {
+		return reactions;
 	}
 
-	public void setWatchedVideos(Set<Video> watchedVideos) {
-		this.watchedVideos = watchedVideos;
+	public void setReaction(Set<Reaction> reactions) {
+		this.reactions = reactions;
 	}
 
 }

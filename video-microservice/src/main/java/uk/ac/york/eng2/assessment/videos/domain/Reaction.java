@@ -16,22 +16,22 @@ import io.micronaut.serde.annotation.Serdeable;
 
 @Entity
 @Serdeable
-public class Video {
+public class Reaction {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
 	@Column(nullable = false)
-	private String title;
+	private Integer reaction;
 
 	@JsonIgnore
-	@ManyToMany
-	private Set<Hashtag> hashtags;
+	@ManyToOne
+	private User user;
 	
 	@JsonIgnore
-	@OneToMany
-	private Set<Reaction> reactions;
+	@ManyToOne
+	private Video video;
 
 	public Long getId() {
 		return id;
@@ -41,12 +41,27 @@ public class Video {
 		this.id = id;
 	}
 
-	public String getTitle() {
-		return title;
+	public Integer getReaction() {
+		return reaction;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setReaction(Integer reaction) {
+		this.reaction = reaction;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public Video getVideo() {
+		return video;
+	}
+
+	public void setVideo(Video video) {
+		this.video = video;
+	}
 }

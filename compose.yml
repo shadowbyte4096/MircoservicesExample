@@ -1,6 +1,6 @@
 services:
   # Our database management system
-  db:
+  mariadb:
     image: mariadb:11
     environment:
       MARIADB_USER: &dbuser todo
@@ -11,6 +11,14 @@ services:
       - mariadb_data:/var/lib/mysql
     ports:
       - 3306:3306
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: mariadb
+    restart: always
+    ports:
+      - 7777:8080
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest

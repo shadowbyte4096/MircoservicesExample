@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,22 +15,18 @@ import io.micronaut.serde.annotation.Serdeable;
 
 @Entity
 @Serdeable
-public class Video {
+public class Hashtag {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
 	@Column(nullable = false)
-	private String title;
+	private String name;
 
 	@JsonIgnore
 	@ManyToMany
-	private Set<Hashtag> hashtags;
-	
-	@JsonIgnore
-	@OneToMany
-	private Set<Reaction> reactions;
+	private Set<Video> videos;
 
 	public Long getId() {
 		return id;
@@ -41,12 +36,20 @@ public class Video {
 		this.id = id;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public Set<Video> getVideos() {
+		return videos;
+	}
+
+	public void setVideos(Set<Video> videos) {
+		this.videos = videos;
 	}
 
 }
