@@ -26,11 +26,11 @@ public class Video {
 	private String title;
 
 	@JsonIgnore
-	@ManyToMany
+	@OneToMany(mappedBy="video")
 	private Set<Hashtag> hashtags;
 	
 	@JsonIgnore
-	@OneToMany
+	@OneToMany(mappedBy="video")
 	private Set<Reaction> reactions;
 
 	public Long getId() {
@@ -47,6 +47,22 @@ public class Video {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	public Set<Reaction> getReactions() {
+		return reactions;
+	}
+
+	public void setReactions(Set<Reaction> reactions) {
+		this.reactions = reactions;
+	}
+
+	public Set<Hashtag> getHashtags() {
+		return hashtags;
+	}
+	
+	public void setHashtags(Set<Hashtag> hashtags) {
+		this.hashtags = hashtags;
 	}
 
 }

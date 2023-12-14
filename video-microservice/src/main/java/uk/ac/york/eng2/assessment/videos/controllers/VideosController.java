@@ -2,6 +2,7 @@ package uk.ac.york.eng2.assessment.videos.controllers;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -14,10 +15,14 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import jakarta.inject.Inject;
 import uk.ac.york.eng2.assessment.videos.domain.Video;
+import uk.ac.york.eng2.assessment.videos.domain.Hashtag;
+import uk.ac.york.eng2.assessment.videos.domain.Reaction;
 import uk.ac.york.eng2.assessment.videos.domain.User;
+import uk.ac.york.eng2.assessment.videos.dto.HashtagDTO;
 import uk.ac.york.eng2.assessment.videos.dto.VideoDTO;
 import uk.ac.york.eng2.assessment.videos.events.VideosProducer;
 import uk.ac.york.eng2.assessment.videos.repositories.VideosRepository;
+import uk.ac.york.eng2.assessment.videos.repositories.HashtagRepository;
 import uk.ac.york.eng2.assessment.videos.repositories.UsersRepository;
 
 @Controller("/videos")
@@ -28,6 +33,9 @@ public class VideosController {
 
 	@Inject
 	UsersRepository userRepo;
+	
+	@Inject
+	HashtagRepository hashtagRepo;
 
 	@Inject
 	VideosProducer producer;
@@ -41,7 +49,6 @@ public class VideosController {
 	public HttpResponse<Void> add(@Body VideoDTO videoDetails) {
 		Video video = new Video();
 		video.setTitle(videoDetails.getTitle());
-		video.setYear(videoDetails.getYear());
 
 		repo.save(video);
 
@@ -65,9 +72,6 @@ public class VideosController {
 		if (videoDetails.getTitle() != null) {
 			b.setTitle(videoDetails.getTitle());
 		}
-		if (videoDetails.getYear() != null) {
-			b.setYear(videoDetails.getYear());
-		}
 		repo.update(b);
 		return HttpResponse.ok();
 	}
@@ -84,40 +88,40 @@ public class VideosController {
 		return HttpResponse.ok();
 	}
 
-	@Get("/{id}/watchers")
-	public Iterable<User> getWatchers(long id) {
+	@Get("/{id}/hashtag")
+	public Set<Hashtag> getHashtags(long id) {
 		Optional<Video> oVideo = repo.findById(id);
 		if (oVideo.isEmpty()) {
 			return null;
 		}
-		return oVideo.get().getWatchers();
+		return oVideo.get().getHashtags();
 	}
 
 	@Transactional
-	@Put("/{videoId}/watchers/{userId}")
-	public HttpResponse<String> addWatcher(long videoId, long userId) {
+	@Put("/{videoId}/hashtag")
+	public HttpResponse<String> addReaction(long videoId, @Body HashtagDTO hashtagDetails) {
 		Optional<Video> oVideo = repo.findById(videoId);
 		if (oVideo.isEmpty()) {
 			return HttpResponse.notFound(String.format("Video %d not found", videoId));
 		}
-
-		Optional<User> oUser = userRepo.findById(userId);
-		if (oUser.isEmpty()) {
-			return HttpResponse.notFound(String.format("User %d not found", userId));
-		}
-
+		
 		Video video = oVideo.get();
-		if (video.getWatchers().add(oUser.get())) {
+		
+		Hashtag hashtag = new Hashtag();
+		hashtag.setName(hashtagDetails.getName());
+		hashtagRepo.save(hashtag);
+		
+		if (video.getHashtags().add(hashtag)) {
 			repo.update(video);
 			producer.watchVideo(videoId, video);
 		}
 
-		return HttpResponse.ok(String.format("User %d added as watcher of video %d", userId, videoId));
+		return HttpResponse.ok(String.format("hashtag %s of id: %d added as a hashtag of video %d", hashtag.getName(), hashtag.getId(), videoId));
 	}
 
 	@Transactional
-	@Delete("/{videoId}/watchers/{userId}")
-	public HttpResponse<String> removeWatcher(long videoId, long userId) {
+	@Delete("/{videoId}/watchers/{hastagId}")
+	public HttpResponse<String> removeReaction(long videoId, long hastagId) {
 		Optional<Video> oVideo = repo.findById(videoId);
 		if (oVideo.isEmpty()) {
 			return HttpResponse.notFound(String.format("Video %d not found", videoId));
@@ -128,7 +132,7 @@ public class VideosController {
 		 * user was not a watcher of the video.
 		 */ 
 		Video video = oVideo.get();
-		video.getWatchers().removeIf(u -> userId == u.getId());
+		video.getHashtags().removeIf(u -> hastagId == u.getId());
 		repo.update(video);
 
 		return HttpResponse.ok();

@@ -25,8 +25,8 @@ public class Hashtag {
 	private String name;
 
 	@JsonIgnore
-	@ManyToMany
-	private Set<Video> videos;
+	@ManyToOne
+	private Video video;
 
 	public Long getId() {
 		return id;
@@ -44,12 +44,12 @@ public class Hashtag {
 		this.name = name;
 	}
 	
-	public Set<Video> getVideos() {
-		return videos;
+	public Video getVideos() {
+		return video;
 	}
 
-	public void setVideos(Set<Video> videos) {
-		this.videos = videos;
+	public void setVideo(Video video) {
+		this.video = video;
 	}
 
 }

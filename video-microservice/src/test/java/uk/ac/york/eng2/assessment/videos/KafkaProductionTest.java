@@ -58,7 +58,6 @@ public class KafkaProductionTest {
 	public void addVideoWatcher() {
 		Video b = new Video();
 		b.setTitle("Container Security");
-		b.setYear(2020);
 		repo.save(b);
 
 		User u = new User();
