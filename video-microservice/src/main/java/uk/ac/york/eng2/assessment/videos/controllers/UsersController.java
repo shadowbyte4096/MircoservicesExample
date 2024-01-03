@@ -13,8 +13,10 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import jakarta.inject.Inject;
+import uk.ac.york.eng2.assessment.videos.domain.Reaction;
 import uk.ac.york.eng2.assessment.videos.domain.User;
 import uk.ac.york.eng2.assessment.videos.dto.UserDTO;
+import uk.ac.york.eng2.assessment.videos.repositories.ReactionRepository;
 import uk.ac.york.eng2.assessment.videos.repositories.UsersRepository;
 
 @Controller("/users")
@@ -22,6 +24,9 @@ public class UsersController {
 
 	@Inject
 	UsersRepository repo;
+	
+	@Inject
+	ReactionRepository reactionRepo;
 
 	@Get("/")
 	public Iterable<User> list() {
@@ -44,28 +49,39 @@ public class UsersController {
 	@Transactional
 	@Put("/{id}")
 	public HttpResponse<Void> updateUser(long id, @Body UserDTO userDetails) {
-		Optional<User> user = repo.findById(id);
-		if (user.isEmpty()) {
+		Optional<User> oUser = repo.findById(id);
+		if (oUser.isEmpty()) {
 			return HttpResponse.notFound();
 		}
 
-		User u = user.get();
+		User user = oUser.get();
 		if (userDetails.getUsername() != null) {
-			u.setUsername(userDetails.getUsername());
+			user.setUsername(userDetails.getUsername());
 		}
-		repo.save(u);
+		repo.save(user);
 		return HttpResponse.ok();
 	}
 
 	@Transactional
 	@Delete("/{id}")
 	public HttpResponse<Void> deleteUser(long id) {
-		Optional<User> user = repo.findById(id);
-		if (user.isEmpty()) {
+		Optional<User> oUser = repo.findById(id);
+		if (oUser.isEmpty()) {
 			return HttpResponse.notFound();
 		}
-
-		repo.delete(user.get());
+		User user = oUser.get();
+		
+		//delete leftover reactions
+		for (Reaction reaction: reactionRepo.findAll()) {
+			if (reaction.getUser().getId() != user.getId()) {
+				continue;
+			}
+			else {
+				reactionRepo.delete(reaction);
+			}
+		}
+		
+		repo.delete(user);
 		return HttpResponse.ok();
 	}
 

@@ -6,7 +6,6 @@ import io.micronaut.serde.annotation.Serdeable;
 public class VideoDTO {
 
 	private String title;
-	private Integer year;
 
 	public String getTitle() {
 		return title;
@@ -16,17 +15,9 @@ public class VideoDTO {
 		this.title = title;
 	}
 
-	public Integer getYear() {
-		return year;
-	}
-
-	public void setYear(Integer year) {
-		this.year = year;
-	}
-
 	@Override
 	public String toString() {
-		return "VideoDTO [title=" + title + ", year=" + year + "]";
+		return "VideoDTO [title=" + title + "]";
 	}
 
 }

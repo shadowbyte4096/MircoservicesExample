@@ -3,10 +3,10 @@ package uk.ac.york.eng2.assessment.videos.cli.domain;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable
-public class Video {
+public class Hashtag {
 
 	private Long id;
-	private String title;
+	private String name;
 
 	public Long getId() {
 		return id;
@@ -15,18 +15,18 @@ public class Video {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getTitle() {
-		return title;
+	
+	public String getName() {
+		return name;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return "Video [id=" + id + ", title=" + title + "]";
+		return "Hashtag [id=" + id + ", title=" + name + "]";
 	}
 
 }

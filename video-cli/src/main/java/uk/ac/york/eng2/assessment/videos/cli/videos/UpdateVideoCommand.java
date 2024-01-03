@@ -16,9 +16,6 @@ public class UpdateVideoCommand implements Runnable {
 	@Option(names = {"-t", "--title"}, description="Title of the video")
 	private String title;
 
-	@Option(names = {"-y", "--year"}, description="Year the video was published")
-	private Integer year;
-
 	@Inject
 	private VideosClient client;
 
@@ -27,9 +24,6 @@ public class UpdateVideoCommand implements Runnable {
 		VideoDTO videoDetails = new VideoDTO();
 		if (title != null) {
 			videoDetails.setTitle(title);
-		}
-		if (year != null) {
-			videoDetails.setYear(year);
 		}
 		
 		HttpResponse<Void> response = client.updateVideo(id, videoDetails);

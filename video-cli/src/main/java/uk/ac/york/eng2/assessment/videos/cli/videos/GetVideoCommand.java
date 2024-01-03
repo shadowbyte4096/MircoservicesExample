@@ -1,5 +1,6 @@
 package uk.ac.york.eng2.assessment.videos.cli.videos;
 
+import io.micronaut.http.HttpResponse;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;

@@ -3,10 +3,10 @@ package uk.ac.york.eng2.assessment.videos.cli.domain;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable
-public class Video {
+public class Reaction {
 
 	private Long id;
-	private String title;
+	private int reaction;
 
 	public Long getId() {
 		return id;
@@ -15,18 +15,17 @@ public class Video {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getTitle() {
-		return title;
+	
+	public int getReaction() {
+		return reaction;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setReaction(int reaction) {
+		this.reaction = reaction;
 	}
 
 	@Override
 	public String toString() {
-		return "Video [id=" + id + ", title=" + title + "]";
+		return "Reaction [id=" + id + ", reaction=" + reaction + "]";
 	}
-
 }

@@ -15,14 +15,10 @@ public class AddVideoCommand implements Runnable {
 	@Parameters(index="0")
 	private String title;
 
-	@Parameters(index="1")
-	private Integer year;
-
 	@Override
 	public void run() {
 		VideoDTO dto = new VideoDTO();
 		dto.setTitle(title);
-		dto.setYear(year);
 
 		HttpResponse<Void> response = client.add(dto);
 		System.out.println("Server responded with: " + response.getStatus());

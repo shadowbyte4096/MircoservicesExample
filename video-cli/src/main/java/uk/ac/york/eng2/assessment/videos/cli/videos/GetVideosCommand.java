@@ -12,8 +12,9 @@ public class GetVideosCommand implements Runnable {
 
 	@Override
 	public void run() {
-		for (Video b : client.list()) {
-			System.out.println(b);
+		Iterable<Video> videos = client.list();
+		for (Video video : videos) {
+			System.out.println(video);
 		}
 	}
 

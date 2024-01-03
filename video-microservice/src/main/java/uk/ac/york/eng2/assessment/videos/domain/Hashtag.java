@@ -44,7 +44,7 @@ public class Hashtag {
 		this.name = name;
 	}
 	
-	public Video getVideos() {
+	public Video getVideo() {
 		return video;
 	}
 

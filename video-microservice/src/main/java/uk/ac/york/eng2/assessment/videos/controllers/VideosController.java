@@ -23,6 +23,7 @@ import uk.ac.york.eng2.assessment.videos.dto.VideoDTO;
 import uk.ac.york.eng2.assessment.videos.events.VideosProducer;
 import uk.ac.york.eng2.assessment.videos.repositories.VideosRepository;
 import uk.ac.york.eng2.assessment.videos.repositories.HashtagRepository;
+import uk.ac.york.eng2.assessment.videos.repositories.ReactionRepository;
 import uk.ac.york.eng2.assessment.videos.repositories.UsersRepository;
 
 @Controller("/videos")
@@ -36,6 +37,9 @@ public class VideosController {
 	
 	@Inject
 	HashtagRepository hashtagRepo;
+	
+	@Inject
+	ReactionRepository reactionRepo;
 
 	@Inject
 	VideosProducer producer;
@@ -51,6 +55,8 @@ public class VideosController {
 		video.setTitle(videoDetails.getTitle());
 
 		repo.save(video);
+		
+		producer.createVideo(video.getId(), video);
 
 		return HttpResponse.created(URI.create("/videos/" + video.getId()));
 	}
@@ -79,12 +85,29 @@ public class VideosController {
 	@Transactional
 	@Delete("/{id}")
 	public HttpResponse<Void> deleteVideo(long id) {
-		Optional<Video> video = repo.findById(id);
-		if (video.isEmpty()) {
+		Optional<Video> oVideo = repo.findById(id);
+		if (oVideo.isEmpty()) {
 			return HttpResponse.notFound();
 		}
-
-		repo.delete(video.get());
+		Video video = oVideo.get();
+		
+		//delete leftover reactions
+		for (Reaction reaction: reactionRepo.findAll()) {
+			if (reaction.getVideo().getId() != video.getId()) {
+				continue;
+			}
+			else {
+				reactionRepo.delete(reaction);
+			}
+		}
+		
+		//delete leftover hashtags
+		for(Hashtag hashtag : video.getHashtags()) {
+			removeHashtag(id, hashtag.getId());
+		}
+		
+		repo.delete(video);
+		
 		return HttpResponse.ok();
 	}
 
@@ -99,42 +122,42 @@ public class VideosController {
 
 	@Transactional
 	@Put("/{videoId}/hashtag")
-	public HttpResponse<String> addReaction(long videoId, @Body HashtagDTO hashtagDetails) {
+	public HttpResponse<String> addHashtag(long videoId, @Body HashtagDTO hashtagDetails) {
 		Optional<Video> oVideo = repo.findById(videoId);
 		if (oVideo.isEmpty()) {
 			return HttpResponse.notFound(String.format("Video %d not found", videoId));
 		}
 		
 		Video video = oVideo.get();
-		
 		Hashtag hashtag = new Hashtag();
 		hashtag.setName(hashtagDetails.getName());
-		hashtagRepo.save(hashtag);
 		
-		if (video.getHashtags().add(hashtag)) {
+		hashtag.setVideo(video);
+			hashtagRepo.save(hashtag);
 			repo.update(video);
-			producer.watchVideo(videoId, video);
-		}
-
-		return HttpResponse.ok(String.format("hashtag %s of id: %d added as a hashtag of video %d", hashtag.getName(), hashtag.getId(), videoId));
+			return HttpResponse.ok(String.format("hashtag %s of id: %d added as a hashtag of video %d", hashtag.getName(), hashtag.getId(), videoId));
 	}
 
 	@Transactional
-	@Delete("/{videoId}/watchers/{hastagId}")
-	public HttpResponse<String> removeReaction(long videoId, long hastagId) {
+	@Delete("/{videoId}/{hastagId}")
+	public HttpResponse<String> removeHashtag(long videoId, long hastagId) {
 		Optional<Video> oVideo = repo.findById(videoId);
 		if (oVideo.isEmpty()) {
 			return HttpResponse.notFound(String.format("Video %d not found", videoId));
 		}
-
-		/*
-		 * DELETE should be idempotent, so it's OK if the mentioned
-		 * user was not a watcher of the video.
-		 */ 
 		Video video = oVideo.get();
+		
+		Optional<Hashtag> oHashtag = hashtagRepo.findById(hastagId);
+		if (oHashtag.isEmpty()) {
+			return HttpResponse.notFound(String.format("Hashtag %d not found", hastagId));
+		}
+		Hashtag hashtag = oHashtag.get();
+		
 		video.getHashtags().removeIf(u -> hastagId == u.getId());
 		repo.update(video);
-
+		
+		hashtagRepo.delete(hashtag);
+		
 		return HttpResponse.ok();
 	}
 

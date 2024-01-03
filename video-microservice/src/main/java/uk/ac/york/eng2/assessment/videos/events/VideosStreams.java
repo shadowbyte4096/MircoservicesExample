@@ -16,12 +16,13 @@ import io.micronaut.configuration.kafka.streams.ConfiguredStreamBuilder;
 import io.micronaut.context.annotation.Factory;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import uk.ac.york.eng2.assessment.videos.domain.User;
 import uk.ac.york.eng2.assessment.videos.domain.Video;
 
 @Factory
 public class VideosStreams {
 
-	public static final String TOPIC_READ_BY_DAY = "video-watch-by-day";
+	public static final String TOPIC_WATCHED_BY_DAY = "video-watched-by-day";
 
 	@Inject
 	private SerdeRegistry serdeRegistry;
@@ -39,7 +40,7 @@ public class VideosStreams {
 		props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE);
 
 		KStream<Long, Video> videosStream = builder
-			.stream(VideosProducer.TOPIC_READ, Consumed.with(Serdes.Long(), serdeRegistry.getSerde(Video.class)));
+			.stream(VideosProducer.TOPIC_VIDEO_WATCHED, Consumed.with(Serdes.Long(), serdeRegistry.getSerde(Video.class)));
 
 		KStream<WindowedIdentifier, Long> stream = videosStream.groupByKey()
 			.windowedBy(TimeWindows.of(Duration.ofDays(1)).advanceBy(Duration.ofDays(1)))
@@ -47,7 +48,7 @@ public class VideosStreams {
 			.toStream()
 			.selectKey((k, v) -> new WindowedIdentifier(k.key(), k.window().start(), k.window().end()));
 
-		stream.to(TOPIC_READ_BY_DAY,
+		stream.to(TOPIC_WATCHED_BY_DAY,
 			Produced.with(serdeRegistry.getSerde(WindowedIdentifier.class), Serdes.Long()));
 
 		return stream;

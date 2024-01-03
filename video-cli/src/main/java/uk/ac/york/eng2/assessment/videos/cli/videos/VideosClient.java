@@ -9,7 +9,9 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.http.client.annotation.Client;
 import uk.ac.york.eng2.assessment.videos.cli.domain.Video;
+import uk.ac.york.eng2.assessment.videos.cli.domain.Hashtag;
 import uk.ac.york.eng2.assessment.videos.cli.domain.User;
+import uk.ac.york.eng2.assessment.videos.cli.dto.HashtagDTO;
 import uk.ac.york.eng2.assessment.videos.cli.dto.VideoDTO;
 
 @Client("${videos.url:`http://localhost:8080/videos`}")
@@ -30,12 +32,12 @@ public interface VideosClient {
 	@Delete("/{id}")
 	HttpResponse<Void> deleteVideo(long id);
 
-	@Get("/{id}/watchers")
-	public Iterable<User> getWatchers(long id);
+	@Get("/{id}/hashtag")
+	public Iterable<Hashtag> getHashtags(long id);
 
-	@Put("/{videoId}/watchers/{userId}")
-	public HttpResponse<String> addWatcher(long videoId, long userId);	
+	@Put("/{videoId}/hashtag")
+	public HttpResponse<String> addHashtag(long videoId, @Body HashtagDTO hashtag);	
 
-	@Delete("/{videoId}/watchers/{userId}")
-	public HttpResponse<String> removeWatcher(long videoId, long userId);
+	@Delete("/{videoId}/{hashtagId}")
+	public HttpResponse<String> removeHashtag(long videoId, long hashtagId);
 }
