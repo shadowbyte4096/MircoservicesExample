@@ -111,9 +111,9 @@ public class VideosController {
 		return HttpResponse.ok();
 	}
 
-	@Get("/{id}/hashtag")
-	public Set<Hashtag> getHashtags(long id) {
-		Optional<Video> oVideo = repo.findById(id);
+	@Get("/{videoId}/hashtag")
+	public Set<Hashtag> getHashtags(long videoId) {
+		Optional<Video> oVideo = repo.findById(videoId);
 		if (oVideo.isEmpty()) {
 			return null;
 		}

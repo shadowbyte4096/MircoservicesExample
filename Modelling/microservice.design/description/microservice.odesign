@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" name="microservice" version="12.0.0.2017041100">
+  <ownedViewpoints name="Microservice Viewpoint" modelFileExtension="microservice">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="Microservice Diagram" domainClass="microservice::Model" enablePopupBars="true">
+      <metamodel href="../../Microservice%20Moddling/Microservice.ecore#/"/>
+      <defaultLayer name="Default">
+        <nodeMappings name="dataClassNode" label="Data Class Node" semanticCandidatesExpression="feature:repositories" domainClass="microservice::DataClass">
+          <style xsi:type="style:SquareDescription" labelSize="12" showIcon="false" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="eventProducerNode" label="Event Producer Node" semanticCandidatesExpression="feature:events" domainClass="microservice::EventProducer">
+          <style xsi:type="style:SquareDescription" labelSize="12" showIcon="false" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="3">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="eventStreamNode" label="Event Stream Node" domainClass="microservice::EventStream">
+          <style xsi:type="style:SquareDescription" labelSize="12" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='red']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="dataClassRelation" label="Data Class Relation" synchronizationLock="true" sourceMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@nodeMappings[name='dataClassNode']" targetMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@nodeMappings[name='dataClassNode']" targetFinderExpression="aql:self.relation">
+          <style sizeComputationExpression="2" endsCentering="Both">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <containerMappings name="controllerContainer" label="Controller Container" semanticCandidatesExpression="feature:controllers" domainClass="microservice::Controller">
+          <subNodeMappings name="actionNode" label="Action Node" semanticCandidatesExpression="feature:actions" domainClass="microservice::Action">
+            <style xsi:type="style:SquareDescription" labelSize="12" showIcon="false" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            </style>
+          </subNodeMappings>
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12" showIcon="false">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+          </style>
+        </containerMappings>
+      </defaultLayer>
+      <additionalLayers name="detailedLayer" label="Detailed Layer" activeByDefault="true">
+        <edgeMappings name="eventTriggerRelation" label="Event Trigger Relation" sourceMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@nodeMappings[name='eventProducerNode']" targetMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@containerMappings[name='controllerContainer']/@subNodeMappings[name='actionNode']" targetFinderExpression="feature:triggers">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="actionSubject" label="Action Subject" sourceMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@containerMappings[name='controllerContainer']/@subNodeMappings[name='actionNode']" targetMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@nodeMappings[name='dataClassNode']" targetFinderExpression="aql:self.subject">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </additionalLayers>
+      <additionalLayers name="simpleLayer" label="Simple Layer" activeByDefault="true">
+        <edgeMappings name="controllerDataClassRelation" label="Controller Data Class Relation" sourceMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@containerMappings[name='controllerContainer']" targetMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@nodeMappings[name='dataClassNode']" targetFinderExpression="aql:self.actions.subject">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="controllerEventTriggerRelation" label="Controller Event Trigger Relation" sourceMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@nodeMappings[name='eventProducerNode']" targetMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@containerMappings[name='controllerContainer']" targetFinderExpression="aql:self.triggers.eContainer()">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </additionalLayers>
+      <additionalLayers name="fullLayer" label="Full Layer" activeByDefault="true">
+        <edgeMappings name="eventTriggerRelation" label="Event Trigger Relation" sourceMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@nodeMappings[name='eventProducerNode']" targetMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@containerMappings[name='controllerContainer']/@subNodeMappings[name='actionNode']" targetFinderExpression="feature:triggers">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="actionSubject" label="Action Subject" sourceMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@containerMappings[name='controllerContainer']/@subNodeMappings[name='actionNode']" targetMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@nodeMappings[name='dataClassNode']" targetFinderExpression="aql:self.subject">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="actionRelation" label="Action Relation" sourceMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@containerMappings[name='controllerContainer']/@subNodeMappings[name='actionNode']" targetMapping="//@ownedViewpoints[name='Microservice%20Viewpoint']/@ownedRepresentations[name='Microservice%20Diagram']/@defaultLayer/@nodeMappings[name='dataClassNode']" targetFinderExpression="feature:relation">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </additionalLayers>
+    </ownedRepresentations>
+    <ownedJavaExtensions qualifiedClassName="microservice.design.Services"/>
+  </ownedViewpoints>
+</description:Group>

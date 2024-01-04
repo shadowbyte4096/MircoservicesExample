@@ -1,0 +1,47 @@
+@namespace(uri="http://www.york.ac.uk/Microservice/1.1.0", prefix="microservice")
+package microservice;
+
+class Model{
+	val DataClass[*] repositories;
+	val Controller[*] controllers;
+	val Event[*] events;
+	val EventStream[*] streams;
+}
+
+class DataClass{
+	attr String name;
+	ref DataClass[*] relation;
+	attr String[*] data;
+}
+
+class Controller{
+	attr String name;
+	val Action[*] actions;
+}
+
+abstract class Action{
+	attr String name;
+	ref DataClass subject;
+	ref DataClass[*] relation;
+}
+
+class Get extends Action {}
+class Post extends Action {}
+class Put extends Action {}
+class Delete extends Action {}
+
+
+abstract class Event{
+	attr String name;
+}
+
+class EventProducer extends Event{
+	ref Action[*] triggers;
+}
+
+class EventConsumer extends Event{
+}
+
+class EventStream{
+	attr String name;
+}
