@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<microservice:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:microservice="http://www.york.ac.uk/Microservice/1.1.0" xmi:id="_m2qw8Ky2Ee6PXP7HCYeKpg">
-  <microservices xmi:id="_nYZlAKy2Ee6PXP7HCYeKpg">
-    <controllers xmi:id="_G4lOQKy3Ee6PXP7HCYeKpg">
-      <actions xsi:type="microservice:Get" xmi:id="_HZPEQKy3Ee6PXP7HCYeKpg"/>
-    </controllers>
-  </microservices>
-  <microservices xmi:id="_nua4UKy2Ee6PXP7HCYeKpg"/>
-</microservice:Model>

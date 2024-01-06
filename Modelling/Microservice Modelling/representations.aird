@@ -3,7 +3,7 @@
   <viewpoint:DAnalysis uid="_8s-tYKp7Ee6qyKp4LJBP2w" selectedViews="_QsJLsKqWEe6qyKp4LJBP2w" version="14.5.1.202106111100">
     <semanticResources>Microservices.emf</semanticResources>
     <semanticResources>Assessment.Microservices</semanticResources>
-    <semanticResources>untitled.model</semanticResources>
+    <semanticResources>test.model</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_QsJLsKqWEe6qyKp4LJBP2w">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/resource/microservice.design/description/microservice.odesign#//@ownedViewpoints[name='Microservice%20Viewpoint']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_RhJhEKqWEe6qyKp4LJBP2w" name="Video Microservice Diagram" repPath="#_RhI6AKqWEe6qyKp4LJBP2w" changeId="c3697d5f-cbe5-4935-b68e-4a7455a5e861">
