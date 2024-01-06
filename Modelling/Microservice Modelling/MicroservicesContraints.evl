@@ -1,0 +1,21 @@
+
+context Model{
+	constraint atLeastOneMicroservice{
+		check: self.microservices.size() >= 1
+		message: "there must be at least 1 microservice: there are currently: " + self.microservices.size()
+	}
+}
+
+context EventConsumer{
+	constraint consumerHasProducer{
+		check: self.producer != null
+		message: "consumer '" + self.name + "' must be linked to  producer"
+	}
+}
+
+context EventStream{
+	constraint consumerHasProducer{
+		check: self.producer != null
+		message: "stream '" + self.name + "' must be linked to  producer"
+	}
+}

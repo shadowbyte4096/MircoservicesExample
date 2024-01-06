@@ -1,7 +1,13 @@
 @namespace(uri="http://www.york.ac.uk/Microservice/1.1.0", prefix="microservice")
 package microservice;
 
+
 class Model{
+	val Microservice[*] microservices;
+}
+
+class Microservice{
+	attr String name;
 	val DataClass[*] repositories;
 	val Controller[*] controllers;
 	val Event[*] events;
@@ -40,8 +46,10 @@ class EventProducer extends Event{
 }
 
 class EventConsumer extends Event{
+	ref EventProducer producer;
 }
 
 class EventStream{
 	attr String name;
+	ref EventProducer producer;
 }
