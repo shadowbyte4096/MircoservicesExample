@@ -10,7 +10,8 @@ class Microservice{
 	attr String name;
 	val DataClass[*] repositories;
 	val Controller[*] controllers;
-	val Event[*] events;
+	val EventProducer[*] producers;
+	val EventConsumer[*] consumers;
 	val EventStream[*] streams;
 }
 
@@ -40,15 +41,19 @@ abstract class Event{
 	attr String name;
 }
 
-class EventProducer extends Event{
+abstract class Producer extends Event{
+	ref Consumer[*]#producer consumer;
+}
+
+class EventProducer extends Producer{
 	ref Action[*] triggers;
 }
 
-class EventConsumer extends Event{
-	ref EventProducer producer;
+abstract class Consumer extends Event{
+	ref Producer#consumer producer;
 }
 
-class EventStream{
-	attr String name;
-	ref EventProducer producer;
+class EventConsumer extends Consumer{}
+
+class EventStream extends Consumer, Producer{
 }

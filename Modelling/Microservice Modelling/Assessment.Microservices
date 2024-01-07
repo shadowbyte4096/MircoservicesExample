@@ -36,15 +36,17 @@
       <actions xsi:type="microservice:Put" xmi:id="_Qs31MKp6Ee6W287JEY1PCw" name="UpdateUser" subject="_RN9CoKpyEe6W287JEY1PCw"/>
       <actions xsi:type="microservice:Delete" xmi:id="_VzM10Kp6Ee6W287JEY1PCw" name="DeleteUser" subject="_RN9CoKpyEe6W287JEY1PCw"/>
     </controllers>
-    <events xsi:type="microservice:EventProducer" xmi:id="_Ia21UKpyEe6W287JEY1PCw" name="VideoAdded" triggers="_8x4xoKpyEe6W287JEY1PCw"/>
-    <events xsi:type="microservice:EventProducer" xmi:id="_c8Du4Kp6Ee6W287JEY1PCw" name="VideoWatched" triggers="_k_jEMKp6Ee6W287JEY1PCw"/>
-    <events xsi:type="microservice:EventProducer" xmi:id="_sn58sKp6Ee6W287JEY1PCw" name="VideoReacted" triggers="_k_jEMKp6Ee6W287JEY1PCw _2c128Kp5Ee6W287JEY1PCw"/>
-    <events xsi:type="microservice:EventProducer" name="VideoDeleted" triggers="_SNILMKpzEe6W287JEY1PCw"/>
-    <events xsi:type="microservice:EventProducer" name="HashtagReacted" triggers="_k_jEMKp6Ee6W287JEY1PCw _2c128Kp5Ee6W287JEY1PCw"/>
-    <events xsi:type="microservice:EventProducer" name="UserAdded" triggers="_J1fGoKp6Ee6W287JEY1PCw"/>
-    <events xsi:type="microservice:EventProducer" name="UserDeleted" triggers="_VzM10Kp6Ee6W287JEY1PCw"/>
-    <events xsi:type="microservice:EventProducer" name="HashtagAdded" triggers="_M-lCsKpzEe6W287JEY1PCw"/>
-    <events xsi:type="microservice:EventProducer" name="HashtagDeleted" triggers="_hDzEgKpzEe6W287JEY1PCw"/>
+    <producers name="VideoAdded" consumer="//@microservices.2/@consumers.2" triggers="_8x4xoKpyEe6W287JEY1PCw"/>
+    <producers name="VideoWatched" consumer="//@microservices.0/@consumers.0" triggers="_k_jEMKp6Ee6W287JEY1PCw"/>
+    <producers name="VideoReacted" consumer="//@microservices.0/@consumers.1" triggers="_k_jEMKp6Ee6W287JEY1PCw _2c128Kp5Ee6W287JEY1PCw"/>
+    <producers name="VideoDeleted" consumer="//@microservices.2/@consumers.3" triggers="_SNILMKpzEe6W287JEY1PCw"/>
+    <producers name="HashtagReacted" consumer="//@microservices.1/@consumers.0" triggers="_2c128Kp5Ee6W287JEY1PCw _k_jEMKp6Ee6W287JEY1PCw"/>
+    <producers name="UserAdded" consumer="//@microservices.2/@consumers.6" triggers="_J1fGoKp6Ee6W287JEY1PCw"/>
+    <producers name="UserDeleted" consumer="//@microservices.2/@consumers.7" triggers="_VzM10Kp6Ee6W287JEY1PCw"/>
+    <producers name="HashtagAdded" consumer="//@microservices.2/@consumers.4" triggers="_M-lCsKpzEe6W287JEY1PCw"/>
+    <producers name="HashtagDeleted" consumer="//@microservices.2/@consumers.5" triggers="_hDzEgKpzEe6W287JEY1PCw"/>
+    <consumers name="VideoWatched" producer="//@microservices.0/@producers.1"/>
+    <consumers name="VideoReacted" producer="//@microservices.0/@producers.2"/>
   </microservices>
   <microservices name="TrendingHashtagMicroservice">
     <repositories name="Hashtag">
@@ -53,8 +55,7 @@
     <controllers name="HashtagsController">
       <actions xsi:type="microservice:Get" name="GetTopTen" subject="//@microservices.1/@repositories.0"/>
     </controllers>
-    <events xsi:type="microservice:EventConsumer" name="HashtagReacted" producer="//@microservices.0/@events.4"/>
-    <streams name="RecentHashtagsPerHour" producer="//@microservices.0/@events.4"/>
+    <consumers name="HashtagReacted" producer="//@microservices.0/@producers.4"/>
   </microservices>
   <microservices name="SubscriptionMicroservice">
     <repositories name="User" relation="//@microservices.2/@repositories.2"/>
@@ -68,13 +69,15 @@
       <actions xsi:type="microservice:Delete" name="DeleteSubscription" subject="//@microservices.2/@repositories.2" relation="//@microservices.2/@repositories.0"/>
       <actions xsi:type="microservice:Get" name="GetSuggestions" subject="//@microservices.2/@repositories.2" relation="//@microservices.2/@repositories.0"/>
     </controllers>
-    <events xsi:type="microservice:EventProducer" name="HashtagSubscribed" triggers="//@microservices.2/@controllers.0/@actions.1"/>
-    <events xsi:type="microservice:EventProducer" name="HashtagUnsubscribed" triggers="//@microservices.2/@controllers.0/@actions.2"/>
-    <events xsi:type="microservice:EventConsumer" name="VideoAdded" producer="_Ia21UKpyEe6W287JEY1PCw"/>
-    <events xsi:type="microservice:EventConsumer" name="VideoDeleted" producer="//@microservices.0/@events.3"/>
-    <events xsi:type="microservice:EventConsumer" name="HashtagAdded" producer="//@microservices.0/@events.7"/>
-    <events xsi:type="microservice:EventConsumer" name="HashtagDeleted" producer="//@microservices.0/@events.8"/>
-    <events xsi:type="microservice:EventConsumer" name="UserAdded" producer="//@microservices.0/@events.5"/>
-    <events xsi:type="microservice:EventConsumer" name="UserDeleted" producer="//@microservices.0/@events.6"/>
+    <producers name="HashtagSubscribed" consumer="//@microservices.2/@consumers.0" triggers="//@microservices.2/@controllers.0/@actions.1"/>
+    <producers name="HashtagUnsubscribed" consumer="//@microservices.2/@consumers.1" triggers="//@microservices.2/@controllers.0/@actions.2"/>
+    <consumers name="HashtagSubscribed" producer="//@microservices.2/@producers.0"/>
+    <consumers name="HashtagUnsubscribed" producer="//@microservices.2/@producers.1"/>
+    <consumers name="VideoAdded" producer="//@microservices.0/@producers.0"/>
+    <consumers name="VideoDeleted" producer="//@microservices.0/@producers.3"/>
+    <consumers name="HashtagAdded" producer="//@microservices.0/@producers.7"/>
+    <consumers name="HashtagDeleted" producer="//@microservices.0/@producers.8"/>
+    <consumers name="UserAdded" producer="//@microservices.0/@producers.5"/>
+    <consumers name="UserDeleted" producer="//@microservices.0/@producers.6"/>
   </microservices>
 </microservice:Model>

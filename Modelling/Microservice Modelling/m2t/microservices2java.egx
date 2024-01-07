@@ -1,0 +1,79 @@
+pre{
+	var folderGen = "/src-gen/main/java/";
+}
+
+rule Application
+transform microservice : Microservice {
+	template : "Application.egl"
+	parameters : Map{
+		"microservice" = microservice
+	}
+	target : microservice.name.toLowerCase() + getStartFilePath() + "/" + "application.java"
+}
+	
+rule Controllers
+transform controller : Controller {
+	template : "Controller.egl"
+	parameters : Map{
+		"controller" = controller
+	}
+	target : controller.eContainer().name.toLowerCase() + getStartFilePath() + "controllers/" +  controller.name +  ".java"
+}
+	
+rule Domain
+transform data : DataClass {
+	template : "Domain.egl"
+	parameters : Map{
+		"data" = data
+	}
+	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "domain/" +  data.name +  ".java"
+}
+
+rule DTO
+transform data : DataClass {
+	template : "DTO.egl"
+	parameters : Map{
+		"data" = data
+	}
+	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "dto/" +  data.name +  "DTO.java"
+}
+
+rule Repository
+transform data : DataClass {
+	template : "Repository.egl"
+	parameters : Map{
+		"data" = data
+	}
+	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "Repositories/" +  data.name +  "Repository.java"
+}
+
+rule Producers
+transform microservice : Microservice {
+	template : "Producers.egl"
+	parameters : Map{
+		"microservice" = microservice
+	}
+	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "Events/"  + "Producers.java"
+}
+
+rule Consumers
+transform microservice : Microservice {
+	template : "Consumers.egl"
+	parameters : Map{
+		"microservice" = microservice
+	}
+	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "Events/"  + "Consumers.java"
+}
+
+rule Streams
+transform microservice : Microservice {
+	template : "Streams.egl"
+	parameters : Map{
+		"microservice" = microservice
+	}
+	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "Events/"  + "Streams.java"
+}
+
+operation String getStartFilePath(){
+	return folderGen + "assessment/";
+}

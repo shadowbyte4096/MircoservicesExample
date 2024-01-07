@@ -1,0 +1,22 @@
+package assessment.dto;
+
+import io.micronaut.serde.annotation.Serdeable;
+
+@Serdeable
+public class [%=data.name%]DTO {
+	[%for (columnData in data.data){%]
+	
+	private [%=out.startPreserve("/*", "*/", "validate-body", true)%]Object[%=out.stopPreserve()%] [%=columnData.toLowerCase()%];
+	[%}%]
+
+	[%for (columnData in data.data){%]
+	
+	public [%=out.startPreserve("/*", "*/", "validate-body", true)%]Object[%=out.stopPreserve()%] get[%=columnData%]() {
+		return [%=columnData.toLowerCase()%];
+	}
+
+	public void set[%=columnData%]([%=out.startPreserve("/*", "*/", "validate-body", true)%]Object[%=out.stopPreserve()%] [%=columnData.toLowerCase()%]) {
+		this.[%=columnData.toLowerCase()%] = [%=columnData.toLowerCase()%];
+	}
+	[%}%]
+}

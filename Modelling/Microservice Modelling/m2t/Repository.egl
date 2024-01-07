@@ -1,0 +1,21 @@
+package assessment.repositories;
+
+import java.util.Optional;
+[%=out.startPreserve("/*", "*/", "validate-body", true)%]
+
+[%=out.stopPreserve()%]
+import io.micronaut.data.annotation.Repository;
+import io.micronaut.data.repository.CrudRepository;
+import assessment.domain.[%=data.name%];
+import assessment.dto.[%=data.name%]DTO;
+
+@Repository
+public interface [%=data.name%]Repository extends CrudRepository<[%=data.name%], Long> {
+
+	[%=out.startPreserve("/*", "*/", "validate-body", true)%]
+
+	[%=out.stopPreserve()%]
+	
+	Optional<[%=data.name%]DTO> findOne(long id);
+
+}

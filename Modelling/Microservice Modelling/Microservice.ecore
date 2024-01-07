@@ -12,8 +12,10 @@
         eType="#//DataClass" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="controllers" upperBound="-1"
         eType="#//Controller" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="events" upperBound="-1"
-        eType="#//Event" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="producers" upperBound="-1"
+        eType="#//EventProducer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="consumers" upperBound="-1"
+        eType="#//EventConsumer" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="streams" upperBound="-1"
         eType="#//EventStream" containment="true"/>
   </eClassifiers>
@@ -41,15 +43,18 @@
   <eClassifiers xsi:type="ecore:EClass" name="Event" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventProducer" eSuperTypes="#//Event">
+  <eClassifiers xsi:type="ecore:EClass" name="Producer" abstract="true" eSuperTypes="#//Event">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="consumer" upperBound="-1"
+        eType="#//Consumer" eOpposite="#//Consumer/producer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EventProducer" eSuperTypes="#//Producer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="triggers" upperBound="-1"
         eType="#//Action"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventConsumer" eSuperTypes="#//Event">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="producer" eType="#//EventProducer"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Consumer" abstract="true" eSuperTypes="#//Event">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="producer" eType="#//Producer"
+        eOpposite="#//Producer/consumer"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventStream">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="producer" eType="#//EventProducer"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EventConsumer" eSuperTypes="#//Consumer"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EventStream" eSuperTypes="#//Consumer #//Producer"/>
 </ecore:EPackage>
