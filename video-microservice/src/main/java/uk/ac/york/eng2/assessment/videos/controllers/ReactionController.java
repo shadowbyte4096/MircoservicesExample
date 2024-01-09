@@ -70,9 +70,9 @@ public class ReactionController {
 		reactionRepo.save(reaction);
 		
 
-		producer.watchVideo(videoId, video, userId, user);
+		producer.watchVideo(videoId, user);
 		if (reactionDetails.getReaction() != 0) {
-			producer.reactVideo(videoId, video, reaction.getId(), reaction);
+			producer.reactVideo(videoId, reaction);
 		}
 
 		return HttpResponse.created(URI.create("/reactions/" + reaction.getId()));
@@ -99,7 +99,7 @@ public class ReactionController {
 			reactionRepo.update(reaction);
 			
 			if (reaction.getReaction() != 0){
-				producer.reactVideo(videoId, reaction.getVideo(), reaction.getId(), reaction);
+				producer.reactVideo(videoId, reaction);
 			}
 			
 			return HttpResponse.ok();

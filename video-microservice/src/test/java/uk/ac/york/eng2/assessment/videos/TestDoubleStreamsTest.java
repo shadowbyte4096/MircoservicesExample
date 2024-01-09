@@ -44,7 +44,7 @@ public class TestDoubleStreamsTest {
 
 		try (TopologyTestDriver testDriver = new TopologyTestDriver(builder.build())) {
 			TestInputTopic<Long, Video> inputTopic = testDriver.createInputTopic(
-				VideosProducer.TOPIC_READ,
+				VideosProducer.TOPIC_VIDEO_WATCHED,
 				new LongSerializer(), serdeRegistry.getSerializer(Video.class));
 
 			final long videoId = 1L;
@@ -54,7 +54,7 @@ public class TestDoubleStreamsTest {
 			}
 
 			TestOutputTopic<WindowedIdentifier, Long> outputTopic = testDriver.createOutputTopic(
-				VideosStreams.TOPIC_READ_BY_DAY,
+				VideosStreams.TOPIC_WATCHED_BY_DAY,
 				serdeRegistry.getDeserializer(WindowedIdentifier.class),
 				new LongDeserializer());
 

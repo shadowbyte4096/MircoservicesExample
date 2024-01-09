@@ -22,6 +22,7 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import uk.ac.york.eng2.assessment.videos.domain.User;
 import uk.ac.york.eng2.assessment.videos.domain.Video;
 import uk.ac.york.eng2.assessment.videos.events.VideosProducer;
 import uk.ac.york.eng2.assessment.videos.events.VideosStreams;
@@ -67,7 +68,7 @@ public class MicronautStreamsTest {
 	@Test
 	public void watchEventUpdatesCount() {
 		LOGGER.info("About to send event");
-		producer.watchVideo(1L, new Video());
+		producer.watchVideo(1L, new User());
 		LOGGER.info("Sent event");
 
 		// We could do a more advanced test with various counts, but this just checks
@@ -81,7 +82,7 @@ public class MicronautStreamsTest {
 	@KafkaListener(groupId = "micronaut-streams-test")
 	static class StreamsListener {
 
-		@Topic(VideosStreams.TOPIC_READ_BY_DAY)
+		@Topic(VideosStreams.TOPIC_WATCHED_BY_DAY)
 		public void videoWatchMetric(@KafkaKey WindowedIdentifier window, Long count) {
 			LOGGER.info("Received event: {}", window);
 			events.put(window, count);

@@ -45,7 +45,7 @@ public class KafkaProductionTest {
 	@Inject
 	UsersRepository userRepo;
 
-	private static final Map<Long, Video> watchVideos = new HashMap<>();
+	private static final Map<Long, User> watchVideos = new HashMap<>();
 
 	@BeforeEach
 	public void setUp() {
@@ -77,9 +77,9 @@ public class KafkaProductionTest {
 	@Requires(property = "spec.name", value = "KafkaProductionTest")
 	@KafkaListener(groupId = "kafka-production-test")
 	static class TestConsumer {
-		@Topic(VideosProducer.TOPIC_READ)
-		void watchVideo(@KafkaKey Long id, Video video) {
-			watchVideos.put(id, video);
+		@Topic(VideosProducer.TOPIC_VIDEO_WATCHED)
+		void watchVideo(@KafkaKey Long id, User user) {
+			watchVideos.put(id, user);
 		}
 	}
 

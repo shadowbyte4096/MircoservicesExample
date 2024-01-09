@@ -23,9 +23,9 @@ public interface VideosProducer {
 	void createVideo(@KafkaKey Long videoId, Video video);
 	
 	@Topic(TOPIC_VIDEO_WATCHED)
-	void watchVideo(@KafkaKey Long videoId, Video video, Long userId, User user);
+	void watchVideo(@KafkaKey Long videoId, User user);
 	
 	@Topic(TOPIC_VIDEO_REACTED)
-	void reactVideo(@KafkaKey Long videoId, Video video, Long reactionId, Reaction reaction);
+	void reactVideo(@KafkaKey Long videoId, Reaction reaction);
 
 }
