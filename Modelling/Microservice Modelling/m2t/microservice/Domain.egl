@@ -1,0 +1,72 @@
+package assessment.domain;
+
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+[%=out.startPreserve("/*", "*/", "validate-body", true)%]
+
+[%=out.stopPreserve()%]
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.micronaut.serde.annotation.Serdeable;
+
+@Entity
+@Serdeable
+public class [%=data.name%] {
+
+	@Id
+	@GeneratedValue
+	private Long id;
+	[%for (columnData in data.data){%]
+	
+	@Column(nullable = false)
+	private [%=columnData.type%] [%=columnData.name.toLowerCase()%];
+	[%}%]
+	[%for (relation in data.relation){%]
+	
+	@JsonIgnore
+	[%=out.startPreserve("/*", "*/", "validate-body", true)%]
+	@ManyToMany
+	private [%=relation.name%] [%=relation.name.toLowerCase()%];
+	[%=out.stopPreserve()%]
+	[%}%]
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	[%for (columnData in data.data){%]
+	
+	public [%=columnData.type%] get[%=columnData.name%]() {
+		return [%=columnData.name.toLowerCase()%];
+	}
+
+	public void set[%=columnData.name%]([%=columnData.type%] [%=columnData.name.toLowerCase()%]) {
+		this.[%=columnData.name.toLowerCase()%] = [%=columnData.name.toLowerCase()%];
+	}
+	[%}%]
+	[%for (relation in data.relation){%]
+	
+	
+	[%=out.startPreserve("/*", "*/", "validate-body", true)%]
+	public [%=relation.name%] get[%=relation.name%]() {
+		return [%=relation.name.toLowerCase()%];
+	}
+
+	public void set[%=relation.name%]([%=relation.name%] [%=relation.name.toLowerCase()%]) {
+		this.[%=relation.name.toLowerCase()%] = [%=relation.name.toLowerCase()%];
+	}
+	[%=out.stopPreserve()%]
+	[%}%]
+
+}

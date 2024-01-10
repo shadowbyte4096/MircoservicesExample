@@ -36,14 +36,27 @@ context Microservice{
 		}
 	}
 	
+	constraint HasController{
+		check: self.controllers.size() >= 1
+		message: "Microservice '" + self.name + "' at least 1 controller."
+		fix {
+			title: "Add empty controller to " + self.name
+			do{
+				var controller = Controller.createInstance();
+				self.controllers.add(controller);
+			}
+		}
+	}
+	
 	constraint HasHealthCheck{
+		guard: self.satisfies("HasController")
 		check: self.controllers.exists(c | c.actions.exists(a | a.name.contains("health") or  a.name.contains("Health")))
 		message: "Microservice '" + self.name + "' must a health check."
 	}
 }
 
 
-context DataClass{
+context Repo{
 	constraint HasName{
 		check: self.name != "" and self.name != null
 		message: "All DataClass' must have a name."
@@ -71,6 +84,30 @@ context DataClass{
 				self.name = self.name.ftuc();
 			}
 		}
+	}
+}
+
+context DataClass{
+	constraint HasName{
+		check: self.name != "" and self.name != null
+		message: "All DataClass' must have a name."
+	}
+		
+	constraint HasNoWhitespace{
+		guard: self.satisfies("HasName")
+		check: not (self.name.contains(" ") or  self.name.contains("	"))
+		message: "Microservice '" + self.name + "' must not have whitespace."
+		fix {
+			title: "Rename to " + self.name.replace(" ", "").replace("	", "")
+			do{ 
+				self.name = self.name.replace(" ", "").replace("	", "");
+			}
+		}
+	}
+	
+	constraint HasType{
+		check: self.type != "" and self.type != null
+		message: "All Events must have a type."
 	}
 }
 
@@ -140,12 +177,35 @@ context Action{
 			}
 		}
 	}
+	
+	constraint HasPath{
+		check: self.path != "" and self.path != null
+		message: "All Actions must have a HTTP path."
+	}
+	
+	critique PathStartsWithSlash{
+		guard: self.satisfies("HasPath")
+		check: self.path.characterAt(0) == "/"
+		message: "Event '" + self.path + "' should start with a '/'"
+		fix {
+			title: "Rename to " +  "/" + self.path
+			do{ 
+				self.path = "/" + self.path;
+			}
+		}
+	}
+	
+	
+	constraint HasReturn{
+		check: self.`return` != "" and self.`return` != null
+		message: "All Actions must have a return type."
+	}
 }
 
 context Event{
 	constraint HasName{
 		check: self.name != "" and self.name != null
-		message: "All EventProducers must have a name."
+		message: "All Events must have a name."
 	}
 	
 	constraint HasNoWhitespace{
@@ -163,7 +223,7 @@ context Event{
 	critique NameStartsWithUC{
 		guard: self.satisfies("HasName")
 		check: self.name == self.name.ftuc()
-		message: "EventProducer '" + self.name + "' should start with an upper case letter."
+		message: "Event '" + self.name + "' should start with an upper case letter."
 		fix {
 			title: "Rename to " +self.name.ftuc()
 			do{ 
@@ -173,22 +233,31 @@ context Event{
 	}
 }
 
-context EventProducer{	
-	constraint ProducerHasTrigger{
-		check: self.triggers.size() >= 1
-		message: "Consumer '" + self.name + "' must have at least 1 trigger."
+context Producer{	
+	constraint ProducerConsumer{
+		check: self.consumer.size() >= 1
+		message: "Producers '" + self.name + "' must have at least 1 consumer."
 	}
 }
 
-context EventConsumer{
+context EventProducer{	
+	constraint ProducerHasTrigger{
+		check: self.triggers.size() >= 1
+		message: "EventProducers '" + self.name + "' must have at least 1 trigger."
+	}
+}
+
+context Consumer{	
 	constraint ConsumerHasProducer{
 		check: self.producer != null
 		message: "Consumer '" + self.name + "' must be linked to a producer."
 	}
-	
+}
+
+context EventConsumer{
 	critique ConsumerHasSameNameAsProducer{
 		check: self.producer.name == self.name
-		message: "Consumer '" + self.name + "' and self.producer.name should have the same name."
+		message: "Consumer '" + self.name + "' and " + self.producer.name + " should have the same name."
 		fix {
 			title: "Rename to " + self.producer.name
 			do{ 
@@ -199,37 +268,8 @@ context EventConsumer{
 }
 
 context EventStream{
-	constraint HasName{
-			check: self.name != "" and self.name != null
-			message: "All EventStreams must have a name."
-	}
-	
-	constraint HasNoWhitespace{
-		guard: self.satisfies("HasName")
-		check: not (self.name.contains(" ") or  self.name.contains("	"))
-		message: "Microservice '" + self.name + "' must not have whitespace."
-		fix {
-			title: "Rename to " + self.name.replace(" ", "").replace("	", "")
-			do{ 
-				self.name = self.name.replace(" ", "").replace("	", "");
-			}
-		}
-	}
-	
-	critique NameStartsWithUC{
-		guard: self.satisfies("HasName")
-		check: self.name == self.name.ftuc()
-		message: "EventStream '" + self.name + "' should start with an upper case letter."
-		fix {
-			title: "Rename to " +self.name.ftuc()
-			do{ 
-				self.name = self.name.ftuc();
-			}
-		}
-	}
-		
-	constraint StreamHasProducer{
-		check: self.producer != null
-		message: "Stream '" + self.name + "' must be linked to a producer."
+	constraint NotCircularStream{
+		check: (self.producer != self) and (self.consumer != self)
+		message: "Stream '" + self.name + "'should not have itself as a producer or consumer."
 	}
 }

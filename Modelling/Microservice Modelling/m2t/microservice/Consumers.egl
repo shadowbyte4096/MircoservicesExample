@@ -1,0 +1,22 @@
+package assessment.events;
+
+import io.micronaut.configuration.kafka.annotation.KafkaKey;
+import io.micronaut.configuration.kafka.annotation.KafkaListener;
+import io.micronaut.configuration.kafka.annotation.Topic;
+[%for (data in microservice.repositories){%]
+import assessment.domain.[%=data.name%];
+[%}%]
+
+@KafkaListener(groupId = "[%=microservice.name%]Consumers")
+public class Consumers {
+	[%for (consumer in microservice.consumers){%]
+	
+		[%var type = "";
+		if (consumer.type != null){
+			type = ", " + consumer.type + " " + consumer.type.toLowerCase();
+		} %]
+	@Topic("[%=consumer.producer.name%]")
+	public void [%=consumer.name%](@KafkaKey Long id[%=type%]) {
+	}
+	[%}%]
+}

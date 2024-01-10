@@ -1,79 +1,154 @@
 pre{
-	var folderGen = "/src-gen/main/java/";
+	var folderGen = "/src/main/java/assessment/";
+	var resourcesFolder = "/src/main/resources/";
 }
 
 rule Application
 transform microservice : Microservice {
-	template : "Application.egl"
+	template : "microservice/Application.egl"
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : microservice.name.toLowerCase() + getStartFilePath() + "/" + "application.java"
+	target : microservice.name + folderGen + "Application.java"
 }
 	
 rule Controllers
 transform controller : Controller {
-	template : "Controller.egl"
+	template : "microservice/Controllers.egl"
 	parameters : Map{
-		"controller" = controller
+		"controller" = controller,
+		"microservice" = controller.eContainer()
 	}
-	target : controller.eContainer().name.toLowerCase() + getStartFilePath() + "controllers/" +  controller.name +  ".java"
+	target : controller.eContainer().name + folderGen + "controllers/" +  controller.name +  ".java"
 }
 	
 rule Domain
-transform data : DataClass {
-	template : "Domain.egl"
+transform data : Repo {
+	template : "microservice/Domain.egl"
 	parameters : Map{
 		"data" = data
 	}
-	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "domain/" +  data.name +  ".java"
+	target : data.eContainer().name + folderGen + "domain/" +  data.name +  ".java"
 }
 
 rule DTO
-transform data : DataClass {
-	template : "DTO.egl"
+transform data : Repo {
+	template : "microservice/DTO.egl"
 	parameters : Map{
 		"data" = data
 	}
-	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "dto/" +  data.name +  "DTO.java"
+	target : data.eContainer().name + folderGen + "dto/" +  data.name +  "DTO.java"
 }
 
 rule Repository
-transform data : DataClass {
-	template : "Repository.egl"
+transform data : Repo {
+	template : "microservice/Repository.egl"
 	parameters : Map{
 		"data" = data
 	}
-	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "Repositories/" +  data.name +  "Repository.java"
+	target : data.eContainer().name + folderGen + "repositories/" +  data.name +  "Repository.java"
 }
 
 rule Producers
 transform microservice : Microservice {
-	template : "Producers.egl"
+	template : "microservice/Producers.egl"
 	parameters : Map{
+		"model" = microservice.eContainer(),
 		"microservice" = microservice
 	}
-	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "Events/"  + "Producers.java"
+	target : microservice.name + folderGen + "events/"  + "Producers.java"
+}
+
+rule DebugConsumers
+transform microservice : Microservice {
+	template : "microservice/DebugConsumers.egl"
+	parameters : Map{
+		"model" = microservice.eContainer(),
+		"microservice" = microservice
+	}
+	target : microservice.name + folderGen + "events/"  + "DebugConsumers.java"
 }
 
 rule Consumers
 transform microservice : Microservice {
-	template : "Consumers.egl"
+	guard : microservice.consumers.size() > 0 
+	template : "microservice/Consumers.egl"
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "Events/"  + "Consumers.java"
+	target : microservice.name + folderGen + "events/"  + "Consumers.java"
 }
 
 rule Streams
 transform microservice : Microservice {
-	template : "Streams.egl"
+	template : "microservice/Streams.egl"
+	parameters : Map{
+		"model" = microservice.eContainer(),
+		"microservice" = microservice
+	}
+	target : microservice.name + folderGen + "events/"  + "Streams.java"
+}
+
+rule WindowedIdentifier
+transform microservice : Microservice {
+	template : "microservice/WindowedIdentifier.egl"
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : data.eContainer().name.toLowerCase() + getStartFilePath() + "Events/"  + "Streams.java"
+	target : microservice.name + folderGen + "events/"  + "WindowedIdentifier.java"
 }
 
-operation String getStartFilePath(){
-	return folderGen + "assessment/";
+rule applicationResources
+transform microservice : Microservice {
+	template : "resources/applicationResources.egl"
+	parameters : Map{
+		"model" = microservice.eContainer(),
+		"microservice" = microservice
+	}
+	target : microservice.name + resourcesFolder + "application.yml"
+}
+
+rule logbackResources
+transform microservice : Microservice {
+	template : "resources/logbackResources.egl"
+	parameters : Map{
+		"microservice" = microservice
+	}
+	target : microservice.name + resourcesFolder + "logback.xml"
+}
+
+rule gradleBuild
+transform microservice : Microservice {
+	template : "toplevel/gradleBuild.egl"
+	parameters : Map{
+		"microservice" = microservice
+	}
+	target : microservice.name + "/build.gradle"
+}
+
+rule gradleProperties
+transform microservice : Microservice {
+	template : "toplevel/gradleProperties.egl"
+	parameters : Map{
+		"microservice" = microservice
+	}
+	target : microservice.name + "/gradle.properties"
+}
+
+rule gradleSettings
+transform microservice : Microservice {
+	template : "toplevel/gradleSettings.egl"
+	parameters : Map{
+		"microservice" = microservice
+	}
+	target : microservice.name + "/settings.gradle"
+}
+
+rule micronautCli
+transform microservice : Microservice {
+	template : "toplevel/micronautCli.egl"
+	parameters : Map{
+		"microservice" = microservice
+	}
+	target : microservice.name + "/micronaut-cli.yml"
 }

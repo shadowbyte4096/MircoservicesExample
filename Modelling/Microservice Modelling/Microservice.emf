@@ -8,28 +8,35 @@ class Model{
 
 class Microservice{
 	attr String name;
-	val DataClass[*] repositories;
+	val Repo[*] repositories;
 	val Controller[*] controllers;
 	val EventProducer[*] producers;
 	val EventConsumer[*] consumers;
 	val EventStream[*] streams;
 }
 
+class Repo{
+	attr String name;
+	ref Repo[*] relation;
+	val DataClass[*] data;
+}
+
 class DataClass{
 	attr String name;
-	ref DataClass[*] relation;
-	attr String[*] data;
+	attr String type;
 }
 
 class Controller{
 	attr String name;
+	ref Repo subject;
 	val Action[*] actions;
 }
 
 abstract class Action{
 	attr String name;
-	ref DataClass subject;
-	ref DataClass[*] relation;
+	attr String path;
+	attr String return;
+	attr String[*] parameters;
 }
 
 class Get extends Action {}
@@ -39,6 +46,7 @@ class Delete extends Action {}
 
 abstract class Event{
 	attr String name;
+	attr String type;
 }
 
 abstract class Producer extends Event{
@@ -53,7 +61,8 @@ abstract class Consumer extends Event{
 	ref Producer#consumer producer;
 }
 
-class EventConsumer extends Consumer{}
+class EventConsumer extends Consumer{
+}
 
 class EventStream extends Consumer, Producer{
 }

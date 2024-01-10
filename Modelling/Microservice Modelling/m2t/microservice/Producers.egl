@@ -1,0 +1,41 @@
+[%
+var numberString = "";
+var microserviceNumber = 0;
+for (service in `model`.microservices){
+	if (service.name != microservice.name){
+	microserviceNumber += 1;
+	continue;
+	}
+	numberString = microserviceNumber.asString();
+	break;
+}
+%]
+package assessment.events;
+
+import io.micronaut.configuration.kafka.annotation.KafkaClient;
+import io.micronaut.configuration.kafka.annotation.KafkaKey;
+import io.micronaut.configuration.kafka.annotation.Topic;
+[%for (data in microservice.repositories){%]
+import assessment.domain.[%=data.name%];
+[%}%]
+	
+@KafkaClient
+public interface Producers {
+
+	/*
+	 * NOTE: this topic has to be created before we start the program, or we will
+	 * have an error from Kafka Streams.
+	 */
+	
+	@Topic("DummyProducer[%=numberString%]")
+	void DummyProducer(@KafkaKey Long id);
+	[%for (producer in microservice.producers){%]
+		[%var type = "";
+		if (producer.type != null){
+			type = ", " + producer.type + " " + producer.type.toLowerCase();
+		} %]
+	
+	@Topic("[%=producer.name%]")
+	void [%=producer.name%](@KafkaKey Long id[%=type%]);
+	[%}%]
+}

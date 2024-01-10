@@ -1,0 +1,3 @@
+services:
+  videomicroservice:
+    image: VideoMicroservice:latest

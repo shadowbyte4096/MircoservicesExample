@@ -1,0 +1,46 @@
+[%
+var numberString = "";
+var microserviceNumber = 0;
+for (service in `model`.microservices){
+	if (service.name != microservice.name){
+	microserviceNumber += 1;
+	continue;
+	}
+	numberString = microserviceNumber.asString();
+	break;
+}
+%]
+package assessment.events;
+
+import io.micronaut.configuration.kafka.annotation.KafkaKey;
+import io.micronaut.configuration.kafka.annotation.KafkaListener;
+import io.micronaut.configuration.kafka.annotation.Topic;
+[%for (data in microservice.repositories){%]
+import assessment.domain.[%=data.name%];
+[%}%]
+
+@KafkaListener(groupId = "[%=microservice.name%]DebugConsumers")
+public class DebugConsumers {
+
+	@Topic("DummyStreamOutput[%=numberString%]")
+	public void DummyStreamOutput[%=numberString%](@KafkaKey WindowedIdentifier window, Long count) {
+	}
+	
+	@Topic("DummyProducer[%=numberString%]")
+	public void DummyProducer[%=numberString%](@KafkaKey Long id) {
+		System.out.printf("%n", id);
+	}
+
+
+	[%for (producer in microservice.producers){%]
+	
+		[%var type = "";
+		if (producer.type != null){
+			type = ", " + producer.type + " " + producer.type.toLowerCase();
+		} %]
+	@Topic("[%=producer.name%]")
+	public void [%=producer.name%](@KafkaKey Long id[%=type%]) {
+		System.out.printf("%n", id);
+	}
+	[%}%]
+}

@@ -1,12 +1,6 @@
 
-var microservice = Microservice.all.first;
-microservice.name.println();
-microservice.name.contains(" ").println();
-"a a".contains(" ").println();
-//microservice.name.ftuc().println();
-//if (microservice.name == microservice.name.ftuc()){
-//	"yes".println();
-//}
-//else{
-//	"no".println();
-//}
+var microservice = Microservice.createInstance();
+microservice.name = "name";
+var controller = Controller.createInstance();
+microservice.controllers.add(controller);
+microservice.controllers.size().println();
