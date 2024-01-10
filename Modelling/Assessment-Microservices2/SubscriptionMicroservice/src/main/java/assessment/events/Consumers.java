@@ -1,0 +1,81 @@
+package assessment.events;
+
+import io.micronaut.configuration.kafka.annotation.KafkaKey;
+import io.micronaut.configuration.kafka.annotation.KafkaListener;
+import io.micronaut.configuration.kafka.annotation.Topic;
+import io.micronaut.http.HttpResponse;
+import jakarta.inject.Inject;
+import assessment.domain.User;
+import assessment.domain.Video;
+
+import java.util.Optional;
+import java.util.Set;
+
+import assessment.domain.Hashtag;
+import assessment.repositories.UserRepository;
+import assessment.repositories.VideoRepository;
+import assessment.repositories.HashtagRepository;
+
+@KafkaListener(groupId = "SubscriptionMicroserviceConsumers")
+public class Consumers {
+	
+	@Inject
+	UserRepository userRepo;
+	
+	@Inject
+	VideoRepository videoRepo;
+	
+	@Inject
+	HashtagRepository hashtagRepo;
+	
+	@Topic("VideoAdded")
+	public void VideoAdded(@KafkaKey Long id, Video video) {
+		video.setId(id);
+		videoRepo.save(video);
+	}
+	
+	@Topic("HashtagAdded")
+	public void HashtagAdded(@KafkaKey Long id, Hashtag hashtag) {
+		Optional<Video> oVideo = videoRepo.findById(id);
+		if (oVideo.isEmpty()) {
+			//Oh no
+		}
+		Video video = oVideo.get();
+		Iterable<Hashtag> hashtags = hashtagRepo.findAll();
+		Boolean found = false;
+		for (Hashtag repoHashtag : hashtags) {
+			if (repoHashtag.getName() == hashtag.getName()) {
+				found = true;
+				video.getHashtags().add(repoHashtag);
+			}
+		}
+		if (!found) {
+			video.getHashtags().add(hashtag);
+			hashtagRepo.save(hashtag);
+			videoRepo.update(video);
+		}
+	}
+	
+	@Topic("UserAdded")
+	public void UserAdded(@KafkaKey Long id, User user) {
+		user.setId(id);
+		userRepo.save(user);
+	}
+	
+	@Topic("VideoWatched")
+	public void VideoWatched(@KafkaKey Long id, User user) {
+		Optional<Video> oVideo = videoRepo.findById(id);
+		if (oVideo.isEmpty()) {
+			//Oh no
+		}
+		Video video = oVideo.get();
+		
+		Optional<User> oUser = userRepo.findById(id);
+		if (oUser.isEmpty()) {
+			//Oh no
+		}
+		User repoUser = oUser.get();
+		video.getUsers().add(repoUser);
+		videoRepo.update(repoUser);
+	}
+}

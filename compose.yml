@@ -40,12 +40,7 @@ services:
       ADMINER_DEFAULT_SERVER: mariadb
     restart: always
     ports:
-      - 7777:8080
-
-  
-  VideoMicroservice:
-    image: H:\epsilon-2-42\workspace\Assessment-Microservices\VideoMicroservice\build\docker\main\Dockerfile
-    
+      - 7777:8080   
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest

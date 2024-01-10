@@ -19,7 +19,6 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
-import uk.ac.york.eng2.assessment.videos.clients.VideosClient;
 import uk.ac.york.eng2.assessment.videos.domain.Video;
 import uk.ac.york.eng2.assessment.videos.domain.Reaction;
 import uk.ac.york.eng2.assessment.videos.domain.User;
