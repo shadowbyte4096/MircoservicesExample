@@ -1,5 +1,5 @@
 applicationType: cli
-defaultPackage: uk.ac.york.eng2.assessment.videos.cli
+defaultPackage: assessment.cli
 testFramework: junit
 sourceLanguage: java
 buildTool: gradle

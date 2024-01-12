@@ -63,19 +63,19 @@ public class Consumers {
 	}
 	
 	@Topic("VideoWatched")
-	public void VideoWatched(@KafkaKey Long id, User user) {
-		Optional<Video> oVideo = videoRepo.findById(id);
+	public void VideoWatched(@KafkaKey Long videoId, Long userId) {
+		Optional<Video> oVideo = videoRepo.findById(videoId);
 		if (oVideo.isEmpty()) {
 			//Oh no
 		}
 		Video video = oVideo.get();
 		
-		Optional<User> oUser = userRepo.findById(id);
+		Optional<User> oUser = userRepo.findById(userId);
 		if (oUser.isEmpty()) {
 			//Oh no
 		}
-		User repoUser = oUser.get();
-		video.getUsers().add(repoUser);
-		videoRepo.update(repoUser);
+		User user = oUser.get();
+		video.getUsers().add(user);
+		videoRepo.update(video);
 	}
 }

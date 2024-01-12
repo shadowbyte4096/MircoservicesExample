@@ -23,6 +23,7 @@ public class Hashtag {
 
 	@Id
 	/* protected region validate-body on begin */
+	@GeneratedValue
 	/* protected region validate-body end */
 	private Long id;
 	

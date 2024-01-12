@@ -47,31 +47,32 @@ public class HashtagsController {
 	@Inject
 	Producers producer;
 	
-	@Get("/{videoId}")
-	public Iterable<Hashtag> ListHashtags(long videoId) {
+	@Get("/")
+	public Iterable<Hashtag> ListHashtags() {
 		return hashtagRepo.findAll();
 	}
 	
 	@Post("/{videoId}")
 	public HttpResponse<String> AddHashtag(long videoId, @Body HashtagDTO details) {
+		
 		Optional<Video> oVideo = videoRepo.findById(videoId);
 		if (oVideo.isEmpty()) {
-			return HttpResponse.notFound(String.format("User %d not found", videoId));
+			return HttpResponse.notFound(String.format("Video %d not found", videoId));
 		}
 		Video video = oVideo.get();
+		for (Hashtag hashtag : hashtagRepo.findAll()) {
+			if (hashtag.getName() != details.getName()) {
+				continue;
+			}
+			video.getHashtags().add(hashtag);
+			videoRepo.update(video);
+			return HttpResponse.ok();
+		}
 		Hashtag hashtag = new Hashtag();
 		hashtag.setName(details.getName());
-		for (Hashtag repoHashtag: hashtagRepo.findAll()) {
-			if (repoHashtag.getName() == details.getName()) {
-				hashtag = repoHashtag;
-			}
-		}
-		
-		if (hashtag.getVideos().add(video)) {
-			hashtagRepo.save(hashtag);
-			producer.HashtagAdded(video.getId(), hashtag);
-		}
-
-		return HttpResponse.created(URI.create("/hashtags/" + hashtag.getId()));
+		hashtagRepo.save(hashtag);
+		video.getHashtags().add(hashtag);
+		videoRepo.update(video);
+		return HttpResponse.created(URI.create("/hashtags/" + hashtag.getId()));	
 	}
 }

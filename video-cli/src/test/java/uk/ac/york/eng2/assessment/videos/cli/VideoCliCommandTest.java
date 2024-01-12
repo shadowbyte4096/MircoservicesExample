@@ -8,6 +8,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.jupiter.api.Test;
 
+import assessment.videos.cli.VideoCliCommand;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VideoCliCommandTest {

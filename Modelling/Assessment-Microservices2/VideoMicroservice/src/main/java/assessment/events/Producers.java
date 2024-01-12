@@ -23,7 +23,7 @@ public interface Producers {
 	void VideoAdded(@KafkaKey Long id, Video video);
 	
 	@Topic("VideoWatched")
-	void VideoWatched(@KafkaKey Long id, Video video);
+	void VideoWatched(@KafkaKey Long videoId, Long userId);
 	
 	@Topic("VideoReacted")
 	void VideoReacted(@KafkaKey Long id, Reaction reaction);

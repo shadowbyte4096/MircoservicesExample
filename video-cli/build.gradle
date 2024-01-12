@@ -4,7 +4,7 @@ plugins {
 }
 
 version = "0.1"
-group = "uk.ac.york.eng2.assessment.videos.cli"
+group = "assessment.videos.cli"
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ dependencies {
 
 
 application {
-    mainClass.set("uk.ac.york.eng2.assessment.videos.cli.VideoCliCommand")
+    mainClass.set("videos.cli.VideoCliCommand")
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("11")
@@ -34,7 +34,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("uk.ac.york.eng2.assessment.videos.cli.*")
+        annotations("assessment.videos.cli.*")
     }
 }
 

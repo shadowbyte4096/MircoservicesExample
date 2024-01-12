@@ -42,17 +42,53 @@ public class SubscriptionController {
 	Producers producer;
 	
 	@Get("/{userId}")
-	public Iterable<Video> ListSubscriptions(long userId) {
-		return null;
+	public Iterable<Hashtag> ListSubscriptions(long userId) {
+		Optional<User> oUser = userRepo.findById(userId);
+		if (oUser.isEmpty()) {
+			return null;
+		}
+		User user = oUser.get();
+		return user.getHashtags();
 	}
 	
 	@Post("/{userId}")
-	public HttpResponse<Void> AddSubscription(long userId, @Body VideoDTO details) {
-		return null;
+	public HttpResponse<String> AddSubscription(long userId, @Body HashtagDTO details) {
+		Optional<User> oUser = userRepo.findById(userId);
+		if (oUser.isEmpty()) {
+			return HttpResponse.notFound(String.format("User %d not found", userId));
+		}
+		User user = oUser.get();
+		for (Hashtag hashtag : hashtagRepo.findAll()) {
+			if (hashtag.getName() != details.getName()) {
+				continue;
+			}
+			user.getHashtags().add(hashtag);
+			userRepo.update(user);
+			return HttpResponse.ok();
+		}
+		Hashtag hashtag = new Hashtag();
+		hashtag.setName(details.getName());
+		hashtagRepo.save(hashtag);
+		user.getHashtags().add(hashtag);
+		userRepo.update(user);
+		return HttpResponse.ok();		
 	}
 	
-	@Delete("/{id}")
-	public HttpResponse<Void> DeleteSubscription(long id) {
-		return null;
+	@Delete("/{userId}")
+	public HttpResponse<String> DeleteSubscription(long userId, @Body HashtagDTO details) {
+		Optional<User> oUser = userRepo.findById(userId);
+		if (oUser.isEmpty()) {
+			return HttpResponse.notFound(String.format("User %d not found", userId));
+		}
+		User user = oUser.get();
+		for (Hashtag hashtag : user.getHashtags()) {
+			if (hashtag.getName() != details.getName()) {
+				continue;
+			}
+			user.getHashtags().remove(hashtag);
+			userRepo.update(user);
+			return HttpResponse.ok();
+		}
+		return HttpResponse.notFound(String.format("User subcription %s not found", details.getName()));
 	}
 }

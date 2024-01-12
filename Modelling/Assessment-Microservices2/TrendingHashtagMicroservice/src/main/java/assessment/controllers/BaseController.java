@@ -34,6 +34,6 @@ public class BaseController {
 	
 	@Get("/")
 	public HttpResponse<Void> GetHealth() {
-		return null;
+		return HttpResponse.ok();
 	}
 }

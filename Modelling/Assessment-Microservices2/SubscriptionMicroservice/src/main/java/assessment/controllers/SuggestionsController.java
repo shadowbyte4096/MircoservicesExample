@@ -1,6 +1,7 @@
 package assessment.controllers;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,10 +43,31 @@ public class SuggestionsController {
 	Producers producer;
 	
 	@Get("/{userId}")
-	public Iterable<Video> GetSuggestions(long userId) {
-		//get hashtags subscribed to
-		//get all videos that have that hashtag
-		//take away videos that user has watched
+	public Iterable<Video> GetSuggestions(long userId, @Body HashtagDTO details) {
+		Optional<User> oUser = userRepo.findById(userId);
+		if (oUser.isEmpty()) {
+			return null;
+		}
+		User user = oUser.get();
+		for (Hashtag hashtag : hashtagRepo.findAll()) {
+			if (hashtag.getName() != details.getName()) {
+				continue;
+			}
+			Set<Video> videos = hashtag.getVideos();
+			if (videos.removeAll(user.getVideos())) {
+				if (videos.size() > 10) {
+					ArrayList<Video> suggested = new ArrayList<Video>();
+					for (Video video : videos) {
+						if (suggested.size() >= 10) {
+							return suggested;
+						}
+						suggested.add(video);
+					}
+				}
+				return videos;
+				
+			}
+		}		
 		return null;
 	}
 }
