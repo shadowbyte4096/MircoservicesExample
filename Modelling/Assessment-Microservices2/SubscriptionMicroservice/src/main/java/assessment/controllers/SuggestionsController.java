@@ -43,7 +43,8 @@ public class SuggestionsController {
 	Producers producer;
 	
 	//gets videos from a hashtag -> removes ones that a user has watched -> trim to 10 videos = 10 suggested videos for a user subscription
-	@Get("/{userId}")
+	@Transactional
+	@Post("/{userId}") //has to be post to have body
 	public Iterable<Video> GetSuggestions(long userId, @Body HashtagDTO details) {
 		Optional<User> oUser = userRepo.findById(userId);
 		if (oUser.isEmpty()) {
@@ -51,7 +52,7 @@ public class SuggestionsController {
 		}
 		User user = oUser.get();
 		for (Hashtag hashtag : hashtagRepo.findAll()) {
-			if (hashtag.getName() != details.getName()) {
+			if (!hashtag.getName().equals(details.getName())) {
 				continue;
 			}
 			Set<Video> videos = hashtag.getVideos();
@@ -70,5 +71,40 @@ public class SuggestionsController {
 			}
 		}		
 		return null;
+	}
+	
+	//gets videos from a hashtag -> removes ones that a user has watched -> trim to 10 videos = 10 suggested videos for a user subscription
+	@Get("/")
+	public HttpResponse<String> AHH() {
+		long userId = 1;
+		HashtagDTO details = new HashtagDTO();
+		details.setName("biran12");
+		
+		
+		Optional<User> oUser = userRepo.findById(userId);
+		if (oUser.isEmpty()) {
+			return HttpResponse.notFound("USER NOT FOUND");
+		}
+		User user = oUser.get();
+		for (Hashtag hashtag : hashtagRepo.findAll()) {
+			if (!hashtag.getName().equals(details.getName())) {
+				continue;
+			}
+			Set<Video> videos = hashtag.getVideos();
+			if (videos.removeAll(user.getVideos())) {
+				if (videos.size() > 10) {
+					ArrayList<Video> suggested = new ArrayList<Video>();
+					for (Video video : videos) {
+						if (suggested.size() >= 10) {
+							return HttpResponse.ok(String.format("suggeted size:", suggested.size()));
+						}
+						suggested.add(video);
+					}
+				}
+				return HttpResponse.ok(String.format("videos size:", videos.size()));
+				
+			}
+		}		
+		return HttpResponse.notFound("HASHTAG NOT FOUND");
 	}
 }

@@ -4,6 +4,7 @@ import assessment.videos.cli.subscription.base.GetSubscriptionMicroserviceHealth
 import assessment.videos.cli.subscription.users.AddSubscriptionsCommand;
 import assessment.videos.cli.subscription.users.DeleteSubscriptionCommand;
 import assessment.videos.cli.subscription.users.GetSubscriptionsCommand;
+import assessment.videos.cli.subscription.videos.GetSuggestionsCommand;
 import assessment.videos.cli.trending.base.GetTrendingHashtagMicroserviceHealthCommand;
 import assessment.videos.cli.trending.hashtags.GetTopTenHashtagsCommand;
 import assessment.videos.cli.video.base.GetVideoMicroserviceHealthCommand;
@@ -33,6 +34,7 @@ import picocli.CommandLine.Option;
             	AddReactionCommand.class, GetReactionCommand.class, UpdateReactionCommand.class,
         		AddUserCommand.class, GetUserCommand.class, GetUsersCommand.class,
         		AddSubscriptionsCommand.class, GetSubscriptionsCommand.class, DeleteSubscriptionCommand.class,
+        		GetSuggestionsCommand.class,
             	AddVideoCommand.class, GetVideoCommand.class, GetVideosCommand.class, GetVideosByHashtagCommand.class, GetVideosByUserCommand.class,  UpdateVideoCommand.class, 
             })
 public class VideoCliCommand implements Runnable {

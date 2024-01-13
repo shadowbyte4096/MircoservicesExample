@@ -83,7 +83,7 @@ public class SubscriptionController {
 		}
 		User user = oUser.get();
 		for (Hashtag hashtag : user.getHashtags()) {
-			if (hashtag.getName() != details.getName()) {
+			if (!hashtag.getName().equals(details.getName())) {
 				continue;
 			}
 			user.getHashtags().remove(hashtag);

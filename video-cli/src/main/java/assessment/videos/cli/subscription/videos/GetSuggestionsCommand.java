@@ -1,6 +1,7 @@
 package assessment.videos.cli.subscription.videos;
 
 import assessment.videos.cli.dto.HashtagDTO;
+import io.micronaut.http.HttpResponse;
 import assessment.videos.cli.domain.Hashtag;
 import assessment.videos.cli.domain.Video;
 import jakarta.inject.Inject;
@@ -13,7 +14,6 @@ public class GetSuggestionsCommand implements Runnable {
 	@Inject
 	private VideosClient client;
 
-
 	@Parameters(index="0")
 	private Long userId;
 	
@@ -22,12 +22,16 @@ public class GetSuggestionsCommand implements Runnable {
 	
 	@Override
 	public void run() {
-		HashtagDTO dto = new HashtagDTO();
-		dto.setName(hashtag);
-		Iterable<Video> videos = client.GetSuggestions(userId, dto);
-		for (Video video : videos) {
-			System.out.println(video);
-		}
+		HttpResponse<String> response = client.ahh();
+		System.out.printf("Server responded with status %s: %s%n",
+				response.getStatus(), response.getBody().orElse("(no text)"));
+		
+//		HashtagDTO dto = new HashtagDTO();
+//		dto.setName(hashtag);
+//		Iterable<Video> videos = client.GetSuggestions(userId, dto);
+//		for (Video video : videos) {
+//			System.out.println(video);
+//		}
 	}
 
 }

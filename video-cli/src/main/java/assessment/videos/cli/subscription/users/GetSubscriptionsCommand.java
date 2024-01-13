@@ -17,13 +17,10 @@ public class GetSubscriptionsCommand implements Runnable {
 	@Override
 	public void run() {
 		Iterable<Hashtag> hashtags = client.ListSubscriptions(userId);
-//		if (hashtags == null) {
-//			System.out.println("[]");
-//			return;
-//		}
-		System.out.println("ahh");
-		System.out.println(hashtags == null);
-		System.out.println(hashtags.iterator().hasNext());
+		if (hashtags == null) {
+			System.out.println("[]");
+			return;
+		}
 		for (Hashtag hashtag : hashtags) {
 			System.out.println(hashtag);
 		}

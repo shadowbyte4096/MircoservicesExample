@@ -15,7 +15,7 @@ import io.micronaut.http.client.annotation.Client;
 @Client("${users.url:`http://localhost:8082/user`}")
 public interface UsersClient {
 	
-	@Get("/{userId}")
+	@Get("/{id}")
 	Iterable<Hashtag> ListSubscriptions(long id);
 	
 	@Post("/{userId}")

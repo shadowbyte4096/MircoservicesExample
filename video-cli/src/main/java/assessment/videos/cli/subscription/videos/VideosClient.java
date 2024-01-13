@@ -13,6 +13,9 @@ import io.micronaut.http.client.annotation.Client;
 @Client("${videos.url:`http://localhost:8082/video`}")
 public interface VideosClient {
 
-	@Get("/{userId}")
+	@Post("/{userId}")
 	Iterable<Video> GetSuggestions(long userId, @Body HashtagDTO details);
+	
+	@Get("/")
+	HttpResponse<String> ahh();
 }

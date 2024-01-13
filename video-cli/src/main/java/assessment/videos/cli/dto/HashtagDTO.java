@@ -17,7 +17,7 @@ public class HashtagDTO {
 
 	@Override
 	public String toString() {
-		return "HashtagDTO [title=" + name + "]";
+		return "HashtagDTO [name=" + name + "]";
 	}
 
 }
