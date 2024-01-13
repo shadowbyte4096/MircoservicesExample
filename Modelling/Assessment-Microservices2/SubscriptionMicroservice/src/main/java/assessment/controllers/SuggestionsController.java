@@ -74,11 +74,12 @@ public class SuggestionsController {
 	}
 	
 	//gets videos from a hashtag -> removes ones that a user has watched -> trim to 10 videos = 10 suggested videos for a user subscription
+	@Transactional
 	@Get("/")
 	public HttpResponse<String> AHH() {
 		long userId = 1;
 		HashtagDTO details = new HashtagDTO();
-		details.setName("biran12");
+		details.setName("h1");
 		
 		
 		Optional<User> oUser = userRepo.findById(userId);
@@ -91,6 +92,7 @@ public class SuggestionsController {
 				continue;
 			}
 			Set<Video> videos = hashtag.getVideos();
+			System.out.println("AAAAAAAAHHHHHHHHHHHH");
 			if (videos.removeAll(user.getVideos())) {
 				if (videos.size() > 10) {
 					ArrayList<Video> suggested = new ArrayList<Video>();
@@ -101,9 +103,9 @@ public class SuggestionsController {
 						suggested.add(video);
 					}
 				}
-				return HttpResponse.ok(String.format("videos size:", videos.size()));
-				
+				return HttpResponse.ok(String.format("videos size1: %d", videos.size()));
 			}
+			return HttpResponse.ok(String.format("videos size2: %d", videos.size()));
 		}		
 		return HttpResponse.notFound("HASHTAG NOT FOUND");
 	}

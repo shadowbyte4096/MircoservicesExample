@@ -8,8 +8,12 @@ import jakarta.inject.Inject;
 import assessment.domain.User;
 import assessment.domain.Video;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import javax.transaction.Transactional;
 
 import assessment.domain.Hashtag;
 import assessment.repositories.UserRepository;
@@ -43,19 +47,26 @@ public class Consumers {
 			//Oh no
 		}
 		Video video = oVideo.get();
+		
 		Iterable<Hashtag> hashtags = hashtagRepo.findAll();
-		Boolean found = false;
 		for (Hashtag repoHashtag : hashtags) {
-			if (repoHashtag.getName() == hashtag.getName()) {
-				found = true;
-				video.getHashtags().add(repoHashtag);
+			if (repoHashtag.getName().equals(hashtag.getName())) {
+				Set<Video> vids = hashtag.getVideos();
+				if (vids == null) {
+					vids = new HashSet<Video>();
+				}
+				vids.add(video);
+				hashtag.setVideos(vids);
+				hashtagRepo.update(hashtag);
+				return;
 			}
 		}
-		if (!found) {
-			hashtagRepo.save(hashtag);
-			video.getHashtags().add(hashtag);
-			videoRepo.update(video);
-		}
+		hashtagRepo.save(hashtag);
+		System.out.println(hashtag.getName());
+		Set<Video> vids = new HashSet<Video>();
+		vids.add(video);
+		hashtag.setVideos(vids);
+		hashtagRepo.update(hashtag);
 	}
 	
 	@Topic("UserAdded")
