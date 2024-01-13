@@ -71,6 +71,10 @@ public class ReactionsController {
 			else if (reaction.getVideo().getId() != videoId) {
 				continue;
 			}
+			else if (reaction.getReaction() == details.getReaction()) {
+				return HttpResponse.ok(String.format("Reaction unchanged"));
+			}
+			
 			reaction.setReaction(details.getReaction());
 			reactionRepo.update(reaction);
 			
@@ -121,7 +125,7 @@ public class ReactionsController {
 		
 		reactionRepo.save(reaction);
 		
-		producer.VideoWatched(videoId, video);
+		producer.VideoWatched(videoId, userId);
 		if (details.getReaction() != 0) {
 			producer.VideoReacted(videoId, reaction);
 			for (Hashtag hashtag : video.getHashtags()) {

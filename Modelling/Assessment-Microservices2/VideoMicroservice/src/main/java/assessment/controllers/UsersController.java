@@ -53,7 +53,7 @@ public class UsersController {
 	}
 	
 	@Post("/")
-	public HttpResponse<Void> AddUser(@Body UserDTO details) {
+	public HttpResponse<String> AddUser(@Body UserDTO details) {
 		User user = new User();
 		user.setUsername(details.getUsername());
 

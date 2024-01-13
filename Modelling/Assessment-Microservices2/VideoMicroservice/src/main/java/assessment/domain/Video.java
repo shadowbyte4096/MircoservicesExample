@@ -32,13 +32,13 @@ public class Video {
 	
 	@JsonIgnore
 	/* protected region validate-body on begin */
-	@ManyToMany(mappedBy="video")
+	@ManyToMany(mappedBy="videos")
 	private Set<Hashtag> hashtags;
 	/* protected region validate-body end */
 	
 	@JsonIgnore
 	/* protected region validate-body on begin */
-	@OneToMany(mappedBy="video")
+	@OneToMany
 	private Set<Reaction> reactions;
 	/* protected region validate-body end */
 	

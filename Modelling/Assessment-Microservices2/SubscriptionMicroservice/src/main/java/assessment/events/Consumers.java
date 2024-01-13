@@ -35,7 +35,9 @@ public class Consumers {
 	}
 	
 	@Topic("HashtagAdded")
-	public void HashtagAdded(@KafkaKey Long id, Hashtag hashtag) {
+	public void HashtagAdded(@KafkaKey Long id, Hashtag hashtagDTO) {
+		Hashtag hashtag = new Hashtag();
+		hashtag.setName(hashtagDTO.getName());
 		Optional<Video> oVideo = videoRepo.findById(id);
 		if (oVideo.isEmpty()) {
 			//Oh no
@@ -50,8 +52,8 @@ public class Consumers {
 			}
 		}
 		if (!found) {
-			video.getHashtags().add(hashtag);
 			hashtagRepo.save(hashtag);
+			video.getHashtags().add(hashtag);
 			videoRepo.update(video);
 		}
 	}

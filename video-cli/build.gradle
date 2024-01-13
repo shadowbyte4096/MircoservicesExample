@@ -23,7 +23,7 @@ dependencies {
 
 
 application {
-    mainClass.set("videos.cli.VideoCliCommand")
+    mainClass.set("assessment.videos.cli.VideoCliCommand")
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("11")

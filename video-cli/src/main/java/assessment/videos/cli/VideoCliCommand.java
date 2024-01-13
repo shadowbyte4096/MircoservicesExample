@@ -1,22 +1,26 @@
 package assessment.videos.cli;
 
-import assessment.videos.cli.reactions.AddReactionCommand;
-import assessment.videos.cli.reactions.GetReactionCommand;
-import assessment.videos.cli.reactions.GetReactionsCommand;
-import assessment.videos.cli.reactions.UpdateReactionCommand;
-import assessment.videos.cli.users.AddUserCommand;
-import assessment.videos.cli.users.DeleteUserCommand;
-import assessment.videos.cli.users.GetUserCommand;
-import assessment.videos.cli.users.GetUsersCommand;
-import assessment.videos.cli.users.UpdateUserCommand;
-import assessment.videos.cli.videos.AddVideoCommand;
-import assessment.videos.cli.videos.AddVideoHashtagCommand;
-import assessment.videos.cli.videos.DeleteVideoCommand;
-import assessment.videos.cli.videos.DeleteVideoHashtagCommand;
-import assessment.videos.cli.videos.GetVideoCommand;
-import assessment.videos.cli.videos.GetVideoHashtagsCommand;
-import assessment.videos.cli.videos.GetVideosCommand;
-import assessment.videos.cli.videos.UpdateVideoCommand;
+import assessment.videos.cli.subscription.base.GetSubscriptionMicroserviceHealthCommand;
+import assessment.videos.cli.subscription.users.AddSubscriptionsCommand;
+import assessment.videos.cli.subscription.users.DeleteSubscriptionCommand;
+import assessment.videos.cli.subscription.users.GetSubscriptionsCommand;
+import assessment.videos.cli.trending.base.GetTrendingHashtagMicroserviceHealthCommand;
+import assessment.videos.cli.trending.hashtags.GetTopTenHashtagsCommand;
+import assessment.videos.cli.video.base.GetVideoMicroserviceHealthCommand;
+import assessment.videos.cli.video.hashtags.AddHashtagCommand;
+import assessment.videos.cli.video.hashtags.GetHashtagsCommand;
+import assessment.videos.cli.video.reactions.AddReactionCommand;
+import assessment.videos.cli.video.reactions.GetReactionCommand;
+import assessment.videos.cli.video.reactions.UpdateReactionCommand;
+import assessment.videos.cli.video.users.AddUserCommand;
+import assessment.videos.cli.video.users.GetUserCommand;
+import assessment.videos.cli.video.users.GetUsersCommand;
+import assessment.videos.cli.video.videos.AddVideoCommand;
+import assessment.videos.cli.video.videos.GetVideoCommand;
+import assessment.videos.cli.video.videos.GetVideosByHashtagCommand;
+import assessment.videos.cli.video.videos.GetVideosByUserCommand;
+import assessment.videos.cli.video.videos.GetVideosCommand;
+import assessment.videos.cli.video.videos.UpdateVideoCommand;
 import io.micronaut.configuration.picocli.PicocliRunner;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -24,10 +28,12 @@ import picocli.CommandLine.Option;
 @Command(name = "video-cli", description = "...",
         mixinStandardHelpOptions = true,
         subcommands = {
-        		AddVideoCommand.class, AddVideoHashtagCommand.class, DeleteVideoCommand.class, DeleteVideoHashtagCommand.class,
-        		GetVideoCommand.class, GetVideoHashtagsCommand.class, GetVideosCommand.class,  UpdateVideoCommand.class, 
-        		AddUserCommand.class, DeleteUserCommand.class, GetUserCommand.class, GetUsersCommand.class, UpdateUserCommand.class, 
-            	AddReactionCommand.class, GetReactionCommand.class, GetReactionsCommand.class, UpdateReactionCommand.class,
+        		GetSubscriptionMicroserviceHealthCommand.class, GetTrendingHashtagMicroserviceHealthCommand.class, GetVideoMicroserviceHealthCommand.class,
+        		AddHashtagCommand.class, GetHashtagsCommand.class, GetTopTenHashtagsCommand.class,
+            	AddReactionCommand.class, GetReactionCommand.class, UpdateReactionCommand.class,
+        		AddUserCommand.class, GetUserCommand.class, GetUsersCommand.class,
+        		AddSubscriptionsCommand.class, GetSubscriptionsCommand.class, DeleteSubscriptionCommand.class,
+            	AddVideoCommand.class, GetVideoCommand.class, GetVideosCommand.class, GetVideosByHashtagCommand.class, GetVideosByUserCommand.class,  UpdateVideoCommand.class, 
             })
 public class VideoCliCommand implements Runnable {
 

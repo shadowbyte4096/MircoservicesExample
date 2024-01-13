@@ -31,7 +31,7 @@ public class Hashtag {
 	
 	@JsonIgnore
 	/* protected region validate-body on begin */
-	@ManyToMany(mappedBy="hashtags")
+	@ManyToMany
 	private Set<Video> videos;
 	/* protected region validate-body end */
 	

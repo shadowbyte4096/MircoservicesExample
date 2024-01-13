@@ -52,9 +52,9 @@ public class HashtagsController {
 		return hashtagRepo.findAll();
 	}
 	
+	@Transactional
 	@Post("/{videoId}")
 	public HttpResponse<String> AddHashtag(long videoId, @Body HashtagDTO details) {
-		
 		Optional<Video> oVideo = videoRepo.findById(videoId);
 		if (oVideo.isEmpty()) {
 			return HttpResponse.notFound(String.format("Video %d not found", videoId));
@@ -64,15 +64,25 @@ public class HashtagsController {
 			if (hashtag.getName() != details.getName()) {
 				continue;
 			}
+			hashtag.getVideos().add(video);
+			hashtagRepo.update(hashtag);
 			video.getHashtags().add(hashtag);
 			videoRepo.update(video);
 			return HttpResponse.ok();
 		}
 		Hashtag hashtag = new Hashtag();
 		hashtag.setName(details.getName());
-		hashtagRepo.save(hashtag);
 		video.getHashtags().add(hashtag);
+		hashtagRepo.save(hashtag);
 		videoRepo.update(video);
+		producer.HashtagAdded(videoId, hashtag);
 		return HttpResponse.created(URI.create("/hashtags/" + hashtag.getId()));	
 	}
+	
+	
+	
+	
+	
+	
+	
 }

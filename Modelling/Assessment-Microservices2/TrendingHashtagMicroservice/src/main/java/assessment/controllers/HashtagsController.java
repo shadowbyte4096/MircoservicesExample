@@ -37,7 +37,7 @@ public class HashtagsController {
 	ReactionRepository reactionRepo;
 	
 	
-	@Get("/")
+	@Get("/TopTen")
 	public Iterable<Hashtag> GetTopTen() {
 		HashMap<Hashtag, Integer> hashtags = new HashMap<Hashtag, Integer>();
 		for (Hashtag hashtag : hashtagRepo.findAll()) {

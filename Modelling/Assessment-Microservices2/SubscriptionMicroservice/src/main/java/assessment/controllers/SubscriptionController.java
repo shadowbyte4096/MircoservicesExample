@@ -41,16 +41,17 @@ public class SubscriptionController {
 	@Inject
 	Producers producer;
 	
-	@Get("/{userId}")
-	public Iterable<Hashtag> ListSubscriptions(long userId) {
-		Optional<User> oUser = userRepo.findById(userId);
+	@Get("/{id}")
+	public Iterable<Hashtag> ListSubscriptions(long id) {
+		Optional<User> oUser = userRepo.findById(id);
 		if (oUser.isEmpty()) {
-			return null;
+			//return null;
 		}
 		User user = oUser.get();
 		return user.getHashtags();
 	}
 	
+	@Transactional
 	@Post("/{userId}")
 	public HttpResponse<String> AddSubscription(long userId, @Body HashtagDTO details) {
 		Optional<User> oUser = userRepo.findById(userId);
@@ -59,7 +60,7 @@ public class SubscriptionController {
 		}
 		User user = oUser.get();
 		for (Hashtag hashtag : hashtagRepo.findAll()) {
-			if (hashtag.getName() != details.getName()) {
+			if (!hashtag.getName().equals(details.getName())) {
 				continue;
 			}
 			user.getHashtags().add(hashtag);

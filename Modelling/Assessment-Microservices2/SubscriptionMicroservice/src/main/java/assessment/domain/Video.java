@@ -28,7 +28,7 @@ public class Video {
 	
 	@JsonIgnore
 	/* protected region validate-body on begin */
-	@ManyToMany
+	@ManyToMany(mappedBy="videos")
 	private Set<Hashtag> hashtags;
 	/* protected region validate-body end */
 	

@@ -42,6 +42,7 @@ public class SuggestionsController {
 	@Inject
 	Producers producer;
 	
+	//gets videos from a hashtag -> removes ones that a user has watched -> trim to 10 videos = 10 suggested videos for a user subscription
 	@Get("/{userId}")
 	public Iterable<Video> GetSuggestions(long userId, @Body HashtagDTO details) {
 		Optional<User> oUser = userRepo.findById(userId);

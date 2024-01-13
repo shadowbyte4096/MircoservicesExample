@@ -34,7 +34,7 @@ public class Reaction {
 	
 	@JsonIgnore
 	/* protected region validate-body on begin */
-	@ManyToMany
+	@ManyToOne
 	private Hashtag hashtag;
 	/* protected region validate-body end */
 	
