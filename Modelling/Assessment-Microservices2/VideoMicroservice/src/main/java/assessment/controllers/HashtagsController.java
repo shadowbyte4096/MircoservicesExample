@@ -65,9 +65,8 @@ public class HashtagsController {
 			if (!hashtag.getName().equals(details.getName())) {
 				continue;
 			}
+			hashtag.getVideos().add(video);
 			hashtagRepo.update(hashtag);
-			video.getHashtags().add(hashtag);
-			videoRepo.update(video);
 			return HttpResponse.ok();
 		}
 		Hashtag hashtag = new Hashtag();
