@@ -22,7 +22,8 @@ import io.micronaut.serde.annotation.Serdeable;
 public class [%=data.name%] {
 
 	@Id
-	@GeneratedValue
+	[%=out.startPreserve("/*", "*/", "validate-body", true)%]
+	[%=out.stopPreserve()%]
 	private Long id;
 	[%for (columnData in data.data){%]
 	

@@ -1,6 +1,8 @@
 
-var microservice = Microservice.createInstance();
-microservice.name = "name";
-var controller = Controller.createInstance();
-microservice.controllers.add(controller);
-microservice.controllers.size().println();
+var microservice = Microservice.all.first;
+var check = microservice.controllers.exists(c | c.actions.exists(a | a.isKindOf(Post) and (a.name.contains("health") or  a.name.contains("Health"))));
+check.println();
+"".println();
+var first = Action.all.first;
+first.name.println();
+Action.all.exists(a | a != first and a.path == first.path and a.type == first.type and a.eContainer().subject == first.eContainer().subject).println();

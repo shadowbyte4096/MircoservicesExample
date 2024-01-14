@@ -4,18 +4,19 @@
     <repositories xmi:id="_viYcsKptEe6W287JEY1PCw" name="Hashtag" relation="_2jiyUKptEe6W287JEY1PCw">
       <data name="Name" type="String"/>
     </repositories>
-    <repositories xmi:id="_2jiyUKptEe6W287JEY1PCw" name="Video" relation="_viYcsKptEe6W287JEY1PCw _WQOpsKpyEe6W287JEY1PCw">
+    <repositories xmi:id="_2jiyUKptEe6W287JEY1PCw" name="Video" relation="_viYcsKptEe6W287JEY1PCw _WQOpsKpyEe6W287JEY1PCw _RN9CoKpyEe6W287JEY1PCw">
       <data name="Title" type="String"/>
     </repositories>
-    <repositories xmi:id="_RN9CoKpyEe6W287JEY1PCw" name="User" relation="_WQOpsKpyEe6W287JEY1PCw">
+    <repositories xmi:id="_RN9CoKpyEe6W287JEY1PCw" name="User" relation="_WQOpsKpyEe6W287JEY1PCw _2jiyUKptEe6W287JEY1PCw">
       <data name="Username" type="String"/>
     </repositories>
     <repositories xmi:id="_WQOpsKpyEe6W287JEY1PCw" name="Reaction" relation="_RN9CoKpyEe6W287JEY1PCw _2jiyUKptEe6W287JEY1PCw">
       <data name="Reaction" type="int"/>
     </repositories>
     <controllers xmi:id="_AvBu4KpuEe6W287JEY1PCw" name="VideosController" subject="_2jiyUKptEe6W287JEY1PCw">
-      <actions xsi:type="microservice:Get" xmi:id="_PGm7oKpyEe6W287JEY1PCw" name="ListVideos" path="/" return="Iterable&lt;Video>"/>
-      <actions xsi:type="microservice:Post" xmi:id="_8x4xoKpyEe6W287JEY1PCw" name="AddVideo" path="/" return="HttpResponse&lt;Void>">
+      <actions xsi:type="microservice:Get" name="ListVideos" path="/" return="Iterable&lt;Video>"/>
+      <actions xsi:type="microservice:Post" xmi:id="_8x4xoKpyEe6W287JEY1PCw" name="AddVideo" path="/{userId}" return="HttpResponse&lt;String>">
+        <parameters>long userId</parameters>
         <parameters>@Body VideoDTO details</parameters>
       </actions>
       <actions xsi:type="microservice:Get" xmi:id="_-ypvgKpyEe6W287JEY1PCw" name="GetVideo" path="/{id}" return="VideoDTO">
@@ -25,21 +26,24 @@
         <parameters>long id</parameters>
         <parameters>@Body VideoDTO details</parameters>
       </actions>
-      <actions xsi:type="microservice:Delete" xmi:id="_SNILMKpzEe6W287JEY1PCw" name="DeleteVideo" path="/{id}" return="HttpResponse&lt;Void>">
-        <parameters>long id</parameters>
+      <actions xsi:type="microservice:Get" name="ListByUser" path="/user/{userId}" return="Iterable&lt;Video>">
+        <parameters>Long userId</parameters>
+      </actions>
+      <actions xsi:type="microservice:Get" name="ListByHashtag" path="/hashtag/{hashtagId}" return="Iterable&lt;Video>">
+        <parameters>Long hashtagId</parameters>
       </actions>
     </controllers>
     <controllers xmi:id="_kaQbQKp5Ee6W287JEY1PCw" name="ReactionsController" subject="_WQOpsKpyEe6W287JEY1PCw">
-      <actions xsi:type="microservice:Get" xmi:id="_y4F90Kp5Ee6W287JEY1PCw" name="GetReaction" path="/{videoId}/{userId}" return="ReactionDTO">
+      <actions xsi:type="microservice:Get" xmi:id="_y4F90Kp5Ee6W287JEY1PCw" name="GetReaction" path="/{videoId}/{userId}" return="Reaction">
         <parameters>long videoId</parameters>
         <parameters>long userId</parameters>
       </actions>
-      <actions xsi:type="microservice:Put" xmi:id="_2c128Kp5Ee6W287JEY1PCw" name="UpdateReaction" path="/{videoId}/{userId}" return="HttpResponse&lt;Void>">
+      <actions xsi:type="microservice:Put" xmi:id="_2c128Kp5Ee6W287JEY1PCw" name="UpdateReaction" path="/{videoId}/{userId}" return="HttpResponse&lt;String>">
         <parameters>long videoId</parameters>
         <parameters>long userId</parameters>
         <parameters>@Body ReactionDTO details</parameters>
       </actions>
-      <actions xsi:type="microservice:Post" xmi:id="_k_jEMKp6Ee6W287JEY1PCw" name="AddReaction" path="/{videoId}/{userId}" return="HttpResponse&lt;Void>">
+      <actions xsi:type="microservice:Post" xmi:id="_k_jEMKp6Ee6W287JEY1PCw" name="AddReaction" path="/{videoId}/{userId}" return="HttpResponse&lt;String>">
         <parameters>long videoId</parameters>
         <parameters>long userId</parameters>
         <parameters>@Body ReactionDTO details</parameters>
@@ -53,47 +57,31 @@
       <actions xsi:type="microservice:Get" xmi:id="_NSpKAKp6Ee6W287JEY1PCw" name="GetUser" path="/{id}" return="UserDTO">
         <parameters>long id</parameters>
       </actions>
-      <actions xsi:type="microservice:Put" xmi:id="_Qs31MKp6Ee6W287JEY1PCw" name="UpdateUser" path="/{id}" return="HttpResponse&lt;Void>">
-        <parameters>long id</parameters>
-        <parameters>@Body UserDTO details</parameters>
-      </actions>
-      <actions xsi:type="microservice:Delete" xmi:id="_VzM10Kp6Ee6W287JEY1PCw" name="DeleteUser" path="/{id}" return="HttpResponse&lt;Void>">
-        <parameters>long id</parameters>
-      </actions>
     </controllers>
     <controllers name="HashtagsController" subject="_viYcsKptEe6W287JEY1PCw">
-      <actions xsi:type="microservice:Get" xmi:id="_HrYqwKpzEe6W287JEY1PCw" name="ListHashtag" path="/{videoId}" return="Iterable&lt;Hashtag>">
-        <parameters>long videoId</parameters>
-      </actions>
-      <actions xsi:type="microservice:Post" xmi:id="_M-lCsKpzEe6W287JEY1PCw" name="AddHashtag" path="/{videoId}" return="HttpResponse&lt;Void>">
+      <actions xsi:type="microservice:Get" xmi:id="_HrYqwKpzEe6W287JEY1PCw" name="ListHashtags" path="/" return="Iterable&lt;Hashtag>"/>
+      <actions xsi:type="microservice:Post" xmi:id="_M-lCsKpzEe6W287JEY1PCw" name="AddHashtag" path="/{videoId}" return="HttpResponse&lt;String>">
         <parameters>long videoId</parameters>
         <parameters>@Body HashtagDTO details</parameters>
-      </actions>
-      <actions xsi:type="microservice:Delete" xmi:id="_hDzEgKpzEe6W287JEY1PCw" name="DeleteHashtag" path="/{id}" return="HttpResponse&lt;Void>">
-        <parameters>long id</parameters>
       </actions>
     </controllers>
     <controllers name="BaseController">
       <actions xsi:type="microservice:Get" name="GetHealth" path="/" return="HttpResponse&lt;Void>"/>
     </controllers>
-    <producers name="VideoAdded" type="Video" consumer="//@microservices.2/@consumers.2" triggers="_8x4xoKpyEe6W287JEY1PCw"/>
-    <producers name="VideoWatched" type="Video" consumer="//@microservices.0/@consumers.0" triggers="_k_jEMKp6Ee6W287JEY1PCw"/>
-    <producers name="VideoReacted" type="Reaction" consumer="//@microservices.0/@consumers.1" triggers="_k_jEMKp6Ee6W287JEY1PCw _2c128Kp5Ee6W287JEY1PCw"/>
-    <producers name="VideoDeleted" consumer="//@microservices.2/@consumers.3" triggers="_SNILMKpzEe6W287JEY1PCw"/>
+    <producers name="VideoAdded" type="Video" consumer="//@microservices.2/@consumers.0" triggers="_8x4xoKpyEe6W287JEY1PCw"/>
+    <producers name="VideoWatched" type="Video" consumer="//@microservices.2/@consumers.3" triggers="_k_jEMKp6Ee6W287JEY1PCw"/>
+    <producers name="VideoReacted" type="Reaction" triggers="_k_jEMKp6Ee6W287JEY1PCw _2c128Kp5Ee6W287JEY1PCw"/>
     <producers name="HashtagReacted" type="Reaction" consumer="//@microservices.1/@consumers.0" triggers="_2c128Kp5Ee6W287JEY1PCw _k_jEMKp6Ee6W287JEY1PCw"/>
-    <producers name="UserAdded" type="User" consumer="//@microservices.2/@consumers.6" triggers="_J1fGoKp6Ee6W287JEY1PCw"/>
-    <producers name="UserDeleted" consumer="//@microservices.2/@consumers.7" triggers="_VzM10Kp6Ee6W287JEY1PCw"/>
-    <producers name="HashtagAdded" type="Hashtag" consumer="//@microservices.2/@consumers.4" triggers="_M-lCsKpzEe6W287JEY1PCw"/>
-    <producers name="HashtagDeleted" consumer="//@microservices.2/@consumers.5" triggers="_hDzEgKpzEe6W287JEY1PCw"/>
-    <consumers name="VideoWatched" type="Video" producer="//@microservices.0/@producers.1"/>
-    <consumers name="VideoReacted" type="Reaction" producer="//@microservices.0/@producers.2"/>
+    <producers name="UserAdded" type="User" consumer="//@microservices.2/@consumers.2" triggers="_J1fGoKp6Ee6W287JEY1PCw"/>
+    <producers name="HashtagAdded" type="Hashtag" consumer="//@microservices.2/@consumers.1 //@microservices.1/@consumers.1" triggers="_M-lCsKpzEe6W287JEY1PCw"/>
   </microservices>
   <microservices name="TrendingHashtagMicroservice">
-    <repositories name="Hashtag">
+    <repositories name="Hashtag" relation="//@microservices.1/@repositories.1">
       <data name="Name" type="String"/>
     </repositories>
-    <repositories name="Reaction">
+    <repositories name="Reaction" relation="//@microservices.1/@repositories.0">
       <data name="Reaction" type="int"/>
+      <data name="TimeCreated" type="String"/>
     </repositories>
     <controllers name="HashtagsController" subject="//@microservices.1/@repositories.0">
       <actions xsi:type="microservice:Get" name="GetTopTen" path="/" return="Iterable&lt;Hashtag>"/>
@@ -101,43 +89,42 @@
     <controllers name="BaseController">
       <actions xsi:type="microservice:Get" name="GetHealth" path="/" return="HttpResponse&lt;Void>"/>
     </controllers>
-    <consumers name="HashtagReacted" type="Reaction" producer="//@microservices.0/@producers.4"/>
+    <consumers name="HashtagReacted" type="Reaction" producer="//@microservices.0/@producers.3"/>
+    <consumers name="HashtagAdded" type="Hashtag" producer="//@microservices.0/@producers.5"/>
   </microservices>
   <microservices name="SubscriptionMicroservice">
-    <repositories name="User" relation="//@microservices.2/@repositories.2"/>
-    <repositories name="Video" relation="//@microservices.2/@repositories.2"/>
+    <repositories name="User" relation="//@microservices.2/@repositories.2 //@microservices.2/@repositories.1"/>
+    <repositories name="Video" relation="//@microservices.2/@repositories.2 //@microservices.2/@repositories.0"/>
     <repositories name="Hashtag" relation="//@microservices.2/@repositories.1">
       <data name="Name" type="String"/>
     </repositories>
     <controllers name="SubscriptionController" subject="//@microservices.2/@repositories.0">
-      <actions xsi:type="microservice:Get" name="ListSubscriptions" path="/{userId}" return="Iterable&lt;Video>">
-        <parameters>long userId</parameters>
-      </actions>
-      <actions xsi:type="microservice:Post" name="AddSubscription" path="/{userId}" return="HttpResponse&lt;Void>">
-        <parameters>long userId</parameters>
-        <parameters>@Body VideoDTO details</parameters>
-      </actions>
-      <actions xsi:type="microservice:Delete" name="DeleteSubscription" path="/{id}" return="HttpResponse&lt;Void>">
+      <actions xsi:type="microservice:Get" name="ListSubscriptions" path="/{id}" return="Iterable&lt;Hashtag>">
         <parameters>long id</parameters>
+      </actions>
+      <actions xsi:type="microservice:Post" name="AddSubscription" path="/{userId}" return="HttpResponse&lt;String>">
+        <parameters>long userId</parameters>
+        <parameters>@Body HashtagDTO details</parameters>
+      </actions>
+      <actions xsi:type="microservice:Delete" name="DeleteSubscription" path="/{userId}" return="HttpResponse&lt;Void>">
+        <parameters>long userId</parameters>
+        <parameters>@Body HashtagDTO details</parameters>
       </actions>
     </controllers>
     <controllers name="SuggestionsController" subject="//@microservices.2/@repositories.1">
-      <actions xsi:type="microservice:Get" name="GetSuggestions" path="/{userId}" return="Iterable&lt;Video>">
+      <actions xsi:type="microservice:Post" name="GetSuggestions" path="/{userId}" return="Iterable&lt;Video>">
         <parameters>long userId</parameters>
+        <parameters>@Body HashtagDTO details</parameters>
       </actions>
     </controllers>
     <controllers name="BaseController">
       <actions xsi:type="microservice:Get" name="GetHealth" path="/" return="HttpResponse&lt;Void>"/>
     </controllers>
-    <producers name="HashtagSubscribed" type="Hashtag" consumer="//@microservices.2/@consumers.0" triggers="//@microservices.2/@controllers.0/@actions.1"/>
-    <producers name="HashtagUnsubscribed" type="Hashtag" consumer="//@microservices.2/@consumers.1" triggers="//@microservices.2/@controllers.0/@actions.2"/>
-    <consumers name="HashtagSubscribed" type="Hashtag" producer="//@microservices.2/@producers.0"/>
-    <consumers name="HashtagUnsubscribed" type="Hashtag" producer="//@microservices.2/@producers.1"/>
+    <producers name="HashtagSubscribed" type="Hashtag" triggers="//@microservices.2/@controllers.0/@actions.1"/>
+    <producers name="HashtagUnsubscribed" type="Hashtag" triggers="//@microservices.2/@controllers.0/@actions.2"/>
     <consumers name="VideoAdded" type="Video" producer="//@microservices.0/@producers.0"/>
-    <consumers name="VideoDeleted" producer="//@microservices.0/@producers.3"/>
-    <consumers name="HashtagAdded" type="Hashtag" producer="//@microservices.0/@producers.7"/>
-    <consumers name="HashtagDeleted" producer="//@microservices.0/@producers.8"/>
-    <consumers name="UserAdded" type="User" producer="//@microservices.0/@producers.5"/>
-    <consumers name="UserDeleted" producer="//@microservices.0/@producers.6"/>
+    <consumers name="HashtagAdded" type="Hashtag" producer="//@microservices.0/@producers.5"/>
+    <consumers name="UserAdded" type="User" producer="//@microservices.0/@producers.4"/>
+    <consumers name="VideoWatched" type="User" producer="//@microservices.0/@producers.1"/>
   </microservices>
 </microservice:Model>

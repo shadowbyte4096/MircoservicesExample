@@ -50,7 +50,7 @@ context Microservice{
 	
 	constraint HasHealthCheck{
 		guard: self.satisfies("HasController")
-		check: self.controllers.exists(c | c.actions.exists(a | a.name.contains("health") or  a.name.contains("Health")))
+		check: self.controllers.exists(c | c.actions.exists(a | a.isKindOf(Get) and (a.name.contains("health") or  a.name.contains("Health"))))
 		message: "Microservice '" + self.name + "' must a health check."
 	}
 }
@@ -84,6 +84,11 @@ context Repo{
 				self.name = self.name.ftuc();
 			}
 		}
+	}
+	
+	constraint InSameMicroservice{
+		check: self.relation.forAll(r | r.eContainer() == self.eContainer())
+		message: "The relations for '" + self.name + "' must be in the same microservice as " + self.name
 	}
 }
 
@@ -183,10 +188,10 @@ context Action{
 		message: "All Actions must have a HTTP path."
 	}
 	
-	critique PathStartsWithSlash{
+	constraint PathStartsWithSlash{
 		guard: self.satisfies("HasPath")
 		check: self.path.characterAt(0) == "/"
-		message: "Event '" + self.path + "' should start with a '/'"
+		message: "Path '" + self.path + "' should start with a '/'"
 		fix {
 			title: "Rename to " +  "/" + self.path
 			do{ 
@@ -195,6 +200,20 @@ context Action{
 		}
 	}
 	
+	//WARNING: may not catch everything if path uses different variable name, manual check required
+	constraint NoSamePathAndType{
+		check: not Action.all.exists(a | a != self
+		and a.path == self.path
+		and a.type == self.type
+		and a.eContainer() == self.eContainer()
+		and not (self.isKindOf(Get) and (self.name.contains("health") or  self.name.contains("Health")))
+		)
+		message: "Action '" + self.name + "' has the same type and controller subject shares the same type as: "
+		+ Action.all.select(a | a != self
+		and a.path == self.path
+		and a.type == self.type
+		and a.eContainer().subject?.name == self.eContainer().subject?.name).name
+	}
 	
 	constraint HasReturn{
 		check: self.`return` != "" and self.`return` != null
@@ -234,9 +253,9 @@ context Event{
 }
 
 context Producer{	
-	constraint ProducerConsumer{
+	critique ProducerConsumer{
 		check: self.consumer.size() >= 1
-		message: "Producers '" + self.name + "' must have at least 1 consumer."
+		message: "Producers '" + self.name + "' should have at least 1 consumer."
 	}
 }
 
@@ -255,6 +274,7 @@ context Consumer{
 }
 
 context EventConsumer{
+	guard: self.satisfies("ConsumerHasProducer")
 	critique ConsumerHasSameNameAsProducer{
 		check: self.producer.name == self.name
 		message: "Consumer '" + self.name + "' and " + self.producer.name + " should have the same name."

@@ -1,5 +1,5 @@
 pre{
-	var folderGen = "/src/main/java/assessment/";
+	var folderGen = "/src-gen/main/java/assessment/";
 	var resourcesFolder = "/src/main/resources/";
 }
 

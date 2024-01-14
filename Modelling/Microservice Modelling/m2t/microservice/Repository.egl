@@ -1,6 +1,9 @@
 package assessment.repositories;
 
 import java.util.Optional;
+
+import io.micronaut.data.annotation.Join;
+import javax.validation.constraints.NotNull;
 [%=out.startPreserve("/*", "*/", "validate-body", true)%]
 
 [%=out.stopPreserve()%]

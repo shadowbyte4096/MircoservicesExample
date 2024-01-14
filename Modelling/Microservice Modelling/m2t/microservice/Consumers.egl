@@ -3,18 +3,29 @@ package assessment.events;
 import io.micronaut.configuration.kafka.annotation.KafkaKey;
 import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
+import javax.transaction.Transactional;
+import jakarta.inject.Inject;
 [%for (data in microservice.repositories){%]
 import assessment.domain.[%=data.name%];
+[%}%]
+[%for (data in microservice.repositories){%]
+import assessment.repositories.[%=data.name%]Repository;
 [%}%]
 
 @KafkaListener(groupId = "[%=microservice.name%]Consumers")
 public class Consumers {
+	[%for (data in microservice.repositories){%]
+	
+	@Inject
+	[%=data.name%]Repository [%=data.name.toLowerCase()%]Repo;
+	[%}%]
 	[%for (consumer in microservice.consumers){%]
 	
 		[%var type = "";
 		if (consumer.type != null){
 			type = ", " + consumer.type + " " + consumer.type.toLowerCase();
 		} %]
+	@Transactional
 	@Topic("[%=consumer.producer.name%]")
 	public void [%=consumer.name%](@KafkaKey Long id[%=type%]) {
 	}

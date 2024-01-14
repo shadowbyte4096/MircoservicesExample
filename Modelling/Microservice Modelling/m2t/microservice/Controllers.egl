@@ -27,7 +27,11 @@ import assessment.repositories.[%=data.name%]Repository;
 import assessment.events.Producers;
 [%}%]
 
-@Controller("/[%=controller.subject.name.toLowerCase()%]")
+[%var path = microservice.name;
+if (controller.subject != null){
+	path = controller.subject.name.toLowerCase();
+}%]
+@Controller("/[%=path%]")
 public class [%=controller.name%] {
 
 	[%for (data in microservice.repositories){%]
@@ -55,6 +59,7 @@ public class [%=controller.name%] {
 		var params = action.parameters.concat(", ");
 		%]
 	
+	@Transactional
 	[%=path%]"[%=action.path%]")
 	public [%=action.`return`%] [%=action.name%]([%=params%]) {
 		return null;
