@@ -62,7 +62,6 @@ public class Consumers {
 			}
 		}
 		hashtagRepo.save(hashtag);
-		System.out.println(hashtag.getName());
 		Set<Video> vids = new HashSet<Video>();
 		vids.add(video);
 		hashtag.setVideos(vids);
@@ -75,6 +74,7 @@ public class Consumers {
 		userRepo.save(user);
 	}
 	
+	@Transactional
 	@Topic("VideoWatched")
 	public void VideoWatched(@KafkaKey Long videoId, Long userId) {
 		Optional<Video> oVideo = videoRepo.findById(videoId);
@@ -88,7 +88,8 @@ public class Consumers {
 			//Oh no
 		}
 		User user = oUser.get();
-		video.getUsers().add(user);
-		videoRepo.update(video);
+		user.getVideos().add(video);
+		userRepo.update(user);
+		
 	}
 }

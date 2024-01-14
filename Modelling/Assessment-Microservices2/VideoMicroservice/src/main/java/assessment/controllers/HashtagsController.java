@@ -1,6 +1,7 @@
 package assessment.controllers;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -61,10 +62,9 @@ public class HashtagsController {
 		}
 		Video video = oVideo.get();
 		for (Hashtag hashtag : hashtagRepo.findAll()) {
-			if (hashtag.getName() != details.getName()) {
+			if (!hashtag.getName().equals(details.getName())) {
 				continue;
 			}
-			hashtag.getVideos().add(video);
 			hashtagRepo.update(hashtag);
 			video.getHashtags().add(hashtag);
 			videoRepo.update(video);
@@ -72,9 +72,13 @@ public class HashtagsController {
 		}
 		Hashtag hashtag = new Hashtag();
 		hashtag.setName(details.getName());
-		video.getHashtags().add(hashtag);
+		Set<Video> videos = hashtag.getVideos();
+		if (videos == null) {
+			videos = new HashSet<Video>();
+		}
+		videos.add(video);
+		hashtag.setVideos(videos);
 		hashtagRepo.save(hashtag);
-		videoRepo.update(video);
 		producer.HashtagAdded(videoId, hashtag);
 		return HttpResponse.created(URI.create("/hashtags/" + hashtag.getId()));	
 	}

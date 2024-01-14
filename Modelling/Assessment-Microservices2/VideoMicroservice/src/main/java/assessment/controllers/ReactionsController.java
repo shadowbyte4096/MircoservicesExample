@@ -62,6 +62,7 @@ public class ReactionsController {
 		return null;
 	}
 	
+	@Transactional
 	@Put("/{videoId}/{userId}")
 	public HttpResponse<String> UpdateReaction(long videoId, long userId, @Body ReactionDTO details) {
 		for (Reaction reaction : reactionRepo.findAll()) {

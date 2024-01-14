@@ -14,6 +14,7 @@ public class GetTopTenHashtagsCommand implements Runnable {
 	@Override
 	public void run() {
 		Iterable<Hashtag> hashtags = client.GetTopTen();
+		System.out.println(hashtags == null);
 		for (Hashtag hashtag : hashtags) {
 			System.out.println(hashtag);
 		}

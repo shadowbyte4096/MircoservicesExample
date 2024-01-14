@@ -55,58 +55,30 @@ public class SuggestionsController {
 			if (!hashtag.getName().equals(details.getName())) {
 				continue;
 			}
-			Set<Video> videos = hashtag.getVideos();
-			if (videos.removeAll(user.getVideos())) {
-				if (videos.size() > 10) {
-					ArrayList<Video> suggested = new ArrayList<Video>();
-					for (Video video : videos) {
-						if (suggested.size() >= 10) {
-							return suggested;
-						}
-						suggested.add(video);
+			Set<Video> hVideos = hashtag.getVideos();
+			if (hVideos.size() > 10) {
+				ArrayList<Video> videos = new ArrayList<Video>(); // don't want to be effecting hVideos
+				Set<Video> uVideos = user.getVideos();
+				for (Video vid : hVideos) {
+					if (!uVideos.contains(vid)) {
+						videos.add(vid);
+					}
+					if (videos.size() >= 10) {
+						return videos;
+					}
+				}
+				for (Video vid : hVideos) {
+					if (uVideos.contains(vid)) {
+						videos.add(vid); //add back ones the user has watched if not reached 10 yet
+					}
+					if (videos.size() >= 10) {
+						return videos;
 					}
 				}
 				return videos;
-				
 			}
+			return hVideos;
 		}		
 		return null;
-	}
-	
-	//gets videos from a hashtag -> removes ones that a user has watched -> trim to 10 videos = 10 suggested videos for a user subscription
-	@Transactional
-	@Get("/")
-	public HttpResponse<String> AHH() {
-		long userId = 1;
-		HashtagDTO details = new HashtagDTO();
-		details.setName("h1");
-		
-		
-		Optional<User> oUser = userRepo.findById(userId);
-		if (oUser.isEmpty()) {
-			return HttpResponse.notFound("USER NOT FOUND");
-		}
-		User user = oUser.get();
-		for (Hashtag hashtag : hashtagRepo.findAll()) {
-			if (!hashtag.getName().equals(details.getName())) {
-				continue;
-			}
-			Set<Video> videos = hashtag.getVideos();
-			System.out.println("AAAAAAAAHHHHHHHHHHHH");
-			if (videos.removeAll(user.getVideos())) {
-				if (videos.size() > 10) {
-					ArrayList<Video> suggested = new ArrayList<Video>();
-					for (Video video : videos) {
-						if (suggested.size() >= 10) {
-							return HttpResponse.ok(String.format("suggeted size:", suggested.size()));
-						}
-						suggested.add(video);
-					}
-				}
-				return HttpResponse.ok(String.format("videos size1: %d", videos.size()));
-			}
-			return HttpResponse.ok(String.format("videos size2: %d", videos.size()));
-		}		
-		return HttpResponse.notFound("HASHTAG NOT FOUND");
 	}
 }

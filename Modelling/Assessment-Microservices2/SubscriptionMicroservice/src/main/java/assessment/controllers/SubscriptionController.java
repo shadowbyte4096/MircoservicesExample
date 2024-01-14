@@ -45,7 +45,7 @@ public class SubscriptionController {
 	public Iterable<Hashtag> ListSubscriptions(long id) {
 		Optional<User> oUser = userRepo.findById(id);
 		if (oUser.isEmpty()) {
-			//return null;
+			return null;
 		}
 		User user = oUser.get();
 		return user.getHashtags();

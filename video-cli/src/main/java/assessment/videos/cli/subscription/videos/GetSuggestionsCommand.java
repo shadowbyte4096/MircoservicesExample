@@ -21,17 +21,13 @@ public class GetSuggestionsCommand implements Runnable {
 	private String hashtag;
 	
 	@Override
-	public void run() {
-		HttpResponse<String> response = client.ahh();
-		System.out.printf("Server responded with status %s: %s%n",
-				response.getStatus(), response.getBody().orElse("(no text)"));
-		
-//		HashtagDTO dto = new HashtagDTO();
-//		dto.setName(hashtag);
-//		Iterable<Video> videos = client.GetSuggestions(userId, dto);
-//		for (Video video : videos) {
-//			System.out.println(video);
-//		}
+	public void run() {		
+		HashtagDTO dto = new HashtagDTO();
+		dto.setName(hashtag);
+		Iterable<Video> videos = client.GetSuggestions(userId, dto);
+		for (Video video : videos) {
+			System.out.println(video);
+		}
 	}
 
 }

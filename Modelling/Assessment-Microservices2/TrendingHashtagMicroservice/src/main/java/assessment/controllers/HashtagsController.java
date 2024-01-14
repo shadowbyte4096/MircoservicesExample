@@ -1,6 +1,7 @@
 package assessment.controllers;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,24 +37,35 @@ public class HashtagsController {
 	@Inject
 	ReactionRepository reactionRepo;
 	
-	
-	@Get("/TopTen")
+	@Transactional
+	@Get("/")
 	public Iterable<Hashtag> GetTopTen() {
+		for (Reaction reaction : reactionRepo.findAll()) { //delete any old reactions
+			LocalDateTime reactionDateTime = LocalDateTime.parse(reaction.getTimeCreated());
+			LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
+			if (reactionDateTime.isBefore(oneHourAgo)) {
+				Hashtag hashtag = reaction.getHashtag(); //need to remove from hashtag before deleting
+				hashtag.getReactions().remove(reaction);
+				hashtagRepo.update(hashtag);
+				reactionRepo.delete(reaction);
+			}
+		}
 		HashMap<Hashtag, Integer> hashtags = new HashMap<Hashtag, Integer>();
 		for (Hashtag hashtag : hashtagRepo.findAll()) {
 			Integer likes = 0;
-			for (Reaction reaction : hashtag.getReactions()) {
+			Set<Reaction> reactions = hashtag.getReactions();
+			for (Reaction reaction : reactions) {
 				if (reaction.getReaction() == 1) {
 					likes ++;
 				}
 			}
-			hashtags.put(hashtag, likes);
+			hashtags.put(hashtag, likes); // adds hashtag like amounts to hashmap
 		}
 		return hashtags
         		.entrySet()
         		.stream()
-        		.sorted(Map.Entry.<Hashtag, Integer>comparingByValue().reversed())
-        		.limit(10)
+        		.sorted(Map.Entry.<Hashtag, Integer>comparingByValue().reversed()) //sort by like count
+        		.limit(10) //take top 10
         		.map(Map.Entry::getKey)
         		.collect(Collectors.toList());
 	}
