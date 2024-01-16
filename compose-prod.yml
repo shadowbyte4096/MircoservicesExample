@@ -20,19 +20,16 @@ services:
 
   # Our microservice, built with './gradlew dockerBuild'
   VideoMicroservice:
-    image: VideoMicroservice:latest
+    image: videomicroservice:latest
     restart: unless-stopped
     ports:
       - 8080:8080
     environment:
       DB_HOST: db-0
-      DB_USER: *dbuser
-      DB_PASSWORD: *dbpass
-      DB_NAME: *dbname
       KAFKA_BOOTSTRAP_SERVERS: kafka-0:9092,kafka-1:9092,kafka-2:9092
 
   TrendingHashtagMicroservice:
-    image: TrendingHashtagMicroservice:latest
+    image: trendinghashtagmicroservice:latest
     restart: unless-stopped
     ports:
       - 8081:8081
@@ -41,7 +38,7 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka-0:9092,kafka-1:9092,kafka-2:9092
 
   SubscriptionMicroservice:
-    image: SubscriptionMicroservice:latest
+    image: subscriptionmicroservice:latest
     restart: unless-stopped
     ports:
       - 8082:8082
