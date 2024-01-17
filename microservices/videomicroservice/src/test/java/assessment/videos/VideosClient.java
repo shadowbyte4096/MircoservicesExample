@@ -11,7 +11,7 @@ import assessment.domain.Video;
 import assessment.domain.User;
 import assessment.dto.VideoDTO;
 
-@Client("/videos")
+@Client("/video")
 public interface VideosClient {
 	
 	@Get("/")

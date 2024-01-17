@@ -13,6 +13,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -35,6 +37,8 @@ import assessment.repositories.UserRepository;
 @MicronautTest(transactional = false, environments = "no_streams")
 public class VideoControllersTest {
 
+	private static Logger logger = LoggerFactory.getLogger("testLogger");
+	
 	@Inject
 	VideosClient client;
 
@@ -68,17 +72,17 @@ public class VideoControllersTest {
 	@Test
 	public void noVideos() {
 		Iterable<Video> iterVideos = client.ListVideos();
-		assertNull(iterVideos);
-		//assertFalse(iterVideos.iterator().hasNext(), "Service should not list any videos initially");
+		assertFalse(iterVideos.iterator().hasNext(), "Service should not list any videos initially");
 	}
 
 	@Test
 	public void addVideo() {
 		final String videoTitle = "Container Security";
-
 		VideoDTO video = new VideoDTO();
 		video.setTitle(videoTitle);
 		User temp = new User();
+		temp.setUsername("user");
+		logger.debug(temp.getId().toString());
 		userRepo.save(temp);
 		HttpResponse<String> response = client.AddVideo(temp.getId(), video);
 		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");

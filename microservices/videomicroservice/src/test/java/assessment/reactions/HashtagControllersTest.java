@@ -1,4 +1,4 @@
-package assessment.users;
+package assessment.reactions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -13,6 +13,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -20,32 +22,34 @@ import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import assessment.domain.Video;
+import assessment.domain.Hashtag;
 import assessment.domain.Reaction;
 import assessment.domain.User;
-import assessment.dto.UserDTO;
+import assessment.dto.HashtagDTO;
 import assessment.dto.VideoDTO;
 import assessment.events.Producers;
 import assessment.repositories.VideoRepository;
+import assessment.repositories.HashtagRepository;
 import assessment.repositories.ReactionRepository;
 import assessment.repositories.UserRepository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /*
  * We have to disable transactions here, as otherwise the controller will not be
  * able to see changes made by the test.
  */
 @MicronautTest(transactional = false, environments = "no_streams")
-public class UserControllersTest {
+public class HashtagControllersTest {
 
 	private static Logger logger = LoggerFactory.getLogger("testLogger");
 	
 	@Inject
-	UsersClient client;
+	HashtagClient client;
 
 	@Inject
 	VideoRepository videoRepo;
+	
+	@Inject
+	HashtagRepository hashtagRepo;
 
 	@Inject
 	UserRepository userRepo;
@@ -66,44 +70,32 @@ public class UserControllersTest {
 
 	@BeforeEach
 	public void clean() {
+		hashtagRepo.deleteAll();
 		videoRepo.deleteAll();
 		userRepo.deleteAll();
 		//watchedVideos.clear();
 	}
 
 	@Test
-	public void noUsers() {
-		Iterable<User> iterUsers = client.ListUsers();
-		assertFalse(iterUsers.iterator().hasNext(), "Service should not list any videos initially");
+	public void noVideos() {
+		Iterable<Hashtag> iterVideos = client.ListHashtags();
+		assertFalse(iterVideos.iterator().hasNext(), "Service should not list any videos initially");
 	}
 
 	@Test
-	public void addUser() {
-		final String userTitle = "Container Security";
-
-		UserDTO user = new UserDTO();
-		user.setUsername(userTitle);
-		HttpResponse<String> response = client.AddUser(user);
+	public void addHashtag() {
+		final String HashtagName = "Container Security";
+		HashtagDTO hashtag = new HashtagDTO();
+		hashtag.setName(HashtagName);
+		Video temp = new Video();
+		temp.setTitle("video");
+		videoRepo.save(temp);
+		HttpResponse<String> response = client.AddHashtag(temp.getId(), hashtag);
 		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");
 
-		List<User> users = iterableToList(client.ListUsers());
-		assertEquals(1, users.size());
-		assertEquals(userTitle, users.get(0).getUsername());
-	}
-
-	@Test
-	public void getUser() {
-		User user = new User();
-		user.setUsername("Container Security");
-		userRepo.save(user);
-		UserDTO userDTO = client.GetUser(user.getId());
-		assertEquals(user.getUsername(), userDTO.getUsername(), "Username should be fetched correctly");
-	}
-
-	@Test
-	public void getMissingUser() {
-		UserDTO response = client.GetUser(0);
-		assertNull(response, "A missing user should produce a 404");
+		List<Hashtag> hashtags = iterableToList(client.ListHashtags());
+		assertEquals(1, hashtags.size());
+		assertEquals(HashtagName, hashtags.get(0).getName());
 	}
 	
 	private <T> List<T> iterableToList(Iterable<T> iterable) {

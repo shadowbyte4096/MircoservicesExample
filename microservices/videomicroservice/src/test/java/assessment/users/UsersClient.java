@@ -8,7 +8,7 @@ import io.micronaut.http.client.annotation.Client;
 import assessment.domain.User;
 import assessment.dto.UserDTO;
 
-@Client("/videos")
+@Client("/user")
 public interface UsersClient {
 	
 	@Get("/")

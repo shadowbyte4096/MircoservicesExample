@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-@Command(name="add-subscription", description="Adds a subscription", mixinStandardHelpOptions = true)
+@Command(name="subscribe-to-video", description="Adds a subscription", mixinStandardHelpOptions = true)
 public class AddSubscriptionsCommand implements Runnable {
 
 	@Inject

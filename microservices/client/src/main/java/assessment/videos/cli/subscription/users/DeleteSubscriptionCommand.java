@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-@Command(name="delete-subscription", description="Deletes a subscription", mixinStandardHelpOptions = true)
+@Command(name="unsubscribe-to-video", description="Deletes a subscription", mixinStandardHelpOptions = true)
 public class DeleteSubscriptionCommand implements Runnable {
 
 	@Inject
