@@ -9,7 +9,7 @@ transform microservice : Microservice {
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : microservice.name + folderGen + "Application.java"
+	target : microservice.name.toLowerCase() + folderGen + "Application.java"
 }
 	
 rule Controllers
@@ -19,7 +19,7 @@ transform controller : Controller {
 		"controller" = controller,
 		"microservice" = controller.eContainer()
 	}
-	target : controller.eContainer().name + folderGen + "controllers/" +  controller.name +  ".java"
+	target : controller.eContainer().name.toLowerCase() + folderGen + "controllers/" +  controller.name +  ".java"
 }
 	
 rule Domain
@@ -28,7 +28,7 @@ transform data : Repo {
 	parameters : Map{
 		"data" = data
 	}
-	target : data.eContainer().name + folderGen + "domain/" +  data.name +  ".java"
+	target : data.eContainer().name.toLowerCase() + folderGen + "domain/" +  data.name +  ".java"
 }
 
 rule DTO
@@ -37,7 +37,7 @@ transform data : Repo {
 	parameters : Map{
 		"data" = data
 	}
-	target : data.eContainer().name + folderGen + "dto/" +  data.name +  "DTO.java"
+	target : data.eContainer().name.toLowerCase() + folderGen + "dto/" +  data.name +  "DTO.java"
 }
 
 rule Repository
@@ -46,7 +46,7 @@ transform data : Repo {
 	parameters : Map{
 		"data" = data
 	}
-	target : data.eContainer().name + folderGen + "repositories/" +  data.name +  "Repository.java"
+	target : data.eContainer().name.toLowerCase() + folderGen + "repositories/" +  data.name +  "Repository.java"
 }
 
 rule Producers
@@ -56,7 +56,7 @@ transform microservice : Microservice {
 		"model" = microservice.eContainer(),
 		"microservice" = microservice
 	}
-	target : microservice.name + folderGen + "events/"  + "Producers.java"
+	target : microservice.name.toLowerCase() + folderGen + "events/"  + "Producers.java"
 }
 
 rule DebugConsumers
@@ -66,7 +66,7 @@ transform microservice : Microservice {
 		"model" = microservice.eContainer(),
 		"microservice" = microservice
 	}
-	target : microservice.name + folderGen + "events/"  + "DebugConsumers.java"
+	target : microservice.name.toLowerCase() + folderGen + "events/"  + "DebugConsumers.java"
 }
 
 rule Consumers
@@ -76,7 +76,7 @@ transform microservice : Microservice {
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : microservice.name + folderGen + "events/"  + "Consumers.java"
+	target : microservice.name.toLowerCase() + folderGen + "events/"  + "Consumers.java"
 }
 
 rule Streams
@@ -86,7 +86,7 @@ transform microservice : Microservice {
 		"model" = microservice.eContainer(),
 		"microservice" = microservice
 	}
-	target : microservice.name + folderGen + "events/"  + "Streams.java"
+	target : microservice.name.toLowerCase() + folderGen + "events/"  + "Streams.java"
 }
 
 rule WindowedIdentifier
@@ -95,7 +95,7 @@ transform microservice : Microservice {
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : microservice.name + folderGen + "events/"  + "WindowedIdentifier.java"
+	target : microservice.name.toLowerCase() + folderGen + "events/"  + "WindowedIdentifier.java"
 }
 
 rule applicationResources
@@ -105,7 +105,7 @@ transform microservice : Microservice {
 		"model" = microservice.eContainer(),
 		"microservice" = microservice
 	}
-	target : microservice.name + resourcesFolder + "application.yml"
+	target : microservice.name.toLowerCase() + resourcesFolder + "application.yml"
 }
 
 rule logbackResources
@@ -114,7 +114,7 @@ transform microservice : Microservice {
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : microservice.name + resourcesFolder + "logback.xml"
+	target : microservice.name.toLowerCase() + resourcesFolder + "logback.xml"
 }
 
 rule gradleBuild
@@ -123,7 +123,7 @@ transform microservice : Microservice {
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : microservice.name + "/build.gradle"
+	target : microservice.name.toLowerCase() + "/build.gradle"
 }
 
 rule gradleProperties
@@ -132,7 +132,7 @@ transform microservice : Microservice {
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : microservice.name + "/gradle.properties"
+	target : microservice.name.toLowerCase() + "/gradle.properties"
 }
 
 rule gradleSettings
@@ -141,7 +141,7 @@ transform microservice : Microservice {
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : microservice.name + "/settings.gradle"
+	target : microservice.name.toLowerCase() + "/settings.gradle"
 }
 
 rule micronautCli
@@ -150,5 +150,5 @@ transform microservice : Microservice {
 	parameters : Map{
 		"microservice" = microservice
 	}
-	target : microservice.name + "/micronaut-cli.yml"
+	target : microservice.name.toLowerCase() + "/micronaut-cli.yml"
 }
