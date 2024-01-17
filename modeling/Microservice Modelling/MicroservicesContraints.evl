@@ -205,7 +205,8 @@ context Action{
 		check: not Action.all.exists(a | a != self
 		and a.path == self.path
 		and a.type == self.type
-		and a.eContainer() == self.eContainer()
+		and a.eContainer().subject == self.eContainer().subject
+		and a.eContainer().eContainer() == self.eContainer().eContainer()
 		and not (self.isKindOf(Get) and (self.name.contains("health") or  self.name.contains("Health")))
 		)
 		message: "Action '" + self.name + "' has the same type and controller subject shares the same type as: "
