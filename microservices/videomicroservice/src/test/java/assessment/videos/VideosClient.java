@@ -7,35 +7,29 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.http.client.annotation.Client;
-import uk.ac.york.eng2.assessment.videos.domain.Video;
-import uk.ac.york.eng2.assessment.videos.domain.User;
-import uk.ac.york.eng2.assessment.videos.dto.VideoDTO;
+import assessment.domain.Video;
+import assessment.domain.User;
+import assessment.dto.VideoDTO;
 
 @Client("/videos")
 public interface VideosClient {
-
+	
 	@Get("/")
-	Iterable<Video> list();
+	Iterable<Video> ListVideos();
 
-	@Post("/")
-	HttpResponse<Void> add(@Body VideoDTO videoDetails);
+	@Post("/{userId}")
+	HttpResponse<String> AddVideo(Long userId, @Body VideoDTO videoDetails);
 
 	@Get("/{id}")
-	VideoDTO getVideo(long id);
+	VideoDTO GetVideo(long id);
 
 	@Put("/{id}")
-	HttpResponse<Void> updateVideo(long id, @Body VideoDTO videoDetails);
+	HttpResponse<Void> UpdateVideo(long id, @Body VideoDTO videoDetails);
 
-	@Delete("/{id}")
-	HttpResponse<Void> deleteVideo(long id);
+	@Get("/user/{userId}")
+	public Iterable<Video> ListByUser(Long userId);
 
-	@Get("/{id}/watchers")
-	public Iterable<User> getWatchers(long id);
-
-	@Put("/{videoId}/watchers/{userId}")
-	public HttpResponse<String> addWatcher(long videoId, long userId);	
-
-	@Delete("/{videoId}/watchers/{userId}")
-	public HttpResponse<String> removeWatcher(long videoId, long userId);
+	@Get("/hashtag/{hashtagId}")
+	public Iterable<Video> ListByHashtag(Long hashtagId);
 
 }

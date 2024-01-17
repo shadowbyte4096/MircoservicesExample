@@ -5,7 +5,7 @@ micronaut:
     port: 8081
 datasources:
   default:
-    url: jdbc:mariadb://${DB_HOST:`localhost:3307`}/${DB_NAME:TrendingHashtagMicroservice}
+    url: jdbc:mariadb://${DB_HOST:`localhost:3306`}/${DB_NAME:TrendingHashtagMicroservice}
     username: ${DB_USER:todo}
     password: ${DB_PASSWORD:todosecret}
     driver-class-name: org.mariadb.jdbc.Driver

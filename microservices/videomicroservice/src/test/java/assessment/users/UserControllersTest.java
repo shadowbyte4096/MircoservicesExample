@@ -1,4 +1,4 @@
-package assessment.videos;
+package assessment.users;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -22,6 +22,7 @@ import jakarta.inject.Inject;
 import assessment.domain.Video;
 import assessment.domain.Reaction;
 import assessment.domain.User;
+import assessment.dto.UserDTO;
 import assessment.dto.VideoDTO;
 import assessment.events.Producers;
 import assessment.repositories.VideoRepository;
@@ -33,13 +34,13 @@ import assessment.repositories.UserRepository;
  * able to see changes made by the test.
  */
 @MicronautTest(transactional = false, environments = "no_streams")
-public class VideoControllersTest {
+public class UserControllersTest {
 
 	@Inject
-	VideosClient client;
+	UsersClient client;
 
 	@Inject
-	VideoRepository repo;
+	VideoRepository videoRepo;
 
 	@Inject
 	UserRepository userRepo;
@@ -60,49 +61,64 @@ public class VideoControllersTest {
 
 	@BeforeEach
 	public void clean() {
-		repo.deleteAll();
+		videoRepo.deleteAll();
 		userRepo.deleteAll();
 		//watchedVideos.clear();
 	}
 
 	@Test
 	public void noVideos() {
-		Iterable<Video> iterVideos = client.ListVideos();
-		assertNull(iterVideos);
+		Iterable<User> iterUsers = client.ListUsers();
+		assertNull(iterUsers);
 		//assertFalse(iterVideos.iterator().hasNext(), "Service should not list any videos initially");
 	}
 
 	@Test
 	public void addVideo() {
-		final String videoTitle = "Container Security";
+		final String userTitle = "Container Security";
 
-		VideoDTO video = new VideoDTO();
-		video.setTitle(videoTitle);
-		User temp = new User();
-		userRepo.save(temp);
-		HttpResponse<String> response = client.AddVideo(temp.getId(), video);
+		UserDTO user = new UserDTO();
+		user.setUsername(userTitle);
+		HttpResponse<String> response = client.AddUser(user);
 		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");
 
-		List<Video> videos = iterableToList(client.ListVideos());
-		assertEquals(1, videos.size());
-		assertEquals(videoTitle, videos.get(0).getTitle());
+		List<User> users = iterableToList(client.ListUsers());
+		assertEquals(1, users.size());
+		assertEquals(userTitle, users.get(0).getUsername());
 	}
 
 	@Test
-	public void getVideo() {
-		Video video = new Video();
-		video.setTitle("Container Security");
-		repo.save(video);
+	public void getUser() {
+		User user = new User();
+		user.setUsername("Container Security");
+		userRepo.save(user);
 
-		VideoDTO videoDTO = client.GetVideo(video.getId());
-		assertEquals(video.getTitle(), videoDTO.getTitle(), "Title should be fetched correctly");
+		UserDTO userDTO = client.GetUser(user.getId());
+		assertEquals(user.getUsername(), userDTO.getUsername(), "Username should be fetched correctly");
 	}
 
 	@Test
-	public void getMissingVideo() {
-		VideoDTO response = client.GetVideo(0);
-		assertNull(response, "A missing video should produce a 404");
+	public void getMissingUser() {
+		UserDTO response = client.GetUser(0);
+		assertNull(response, "A missing user should produce a 404");
 	}
+
+//	@Test
+//	public void updateUser() {
+//		User user = new User();
+//		user.setUsername("Container Security");
+//		userRepo.save(user);
+//
+//		final String newUsername = "New Username";
+//		UserDTO dtoUsername = new UserDTO();
+//		dtoUsername.setUsername(newUsername);
+//		HttpResponse<Void> response = client.UpdateUser(user.getId(), dtoUsername);
+//		assertEquals(HttpStatus.OK, response.getStatus());
+//
+//		user = userRepo.findById(user.getId()).get();
+//		
+//		assertEquals(newUsername, user.getUsername());
+//	}
 	
 	private <T> List<T> iterableToList(Iterable<T> iterable) {
 		List<T> l = new ArrayList<>();

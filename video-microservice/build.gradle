@@ -48,9 +48,13 @@ micronaut {
 }
 
 test {
+	testLogging {
+	       events "PASSED", "SKIPPED", "FAILED", "STANDARD_OUT", "STANDARD_ERROR"
+	   }
     // report is always generated after tests run
     finalizedBy jacocoTestReport
 }
+
 jacocoTestReport {
     // tests are required to run before generating the report
     dependsOn test
