@@ -56,9 +56,17 @@ public class VideoControllersTest {
 	
 	@BeforeEach
 	public void clean() {
+		for (Video video : videoRepo.findAll()) {
+			video.setUser(null);
+			videoRepo.update(video);
+		}
+		for (User user : userRepo.findAll()) {
+			user.setVideos(new HashSet<Video>());
+			userRepo.update(user);
+		}
 		videoRepo.deleteAll();
-		hashtagRepo.deleteAll();
 		userRepo.deleteAll();
+		hashtagRepo.deleteAll();
 	}
 
 	@Test
@@ -190,6 +198,7 @@ public class VideoControllersTest {
 		
 		VideoDTO video = new VideoDTO();
 		video.setTitle("video1");
+
 		client.AddVideo(user.getId(), video);
 		
 		List<Video> videos = iterableToList(client.ListByUser(user.getId()));
@@ -241,119 +250,119 @@ public class VideoControllersTest {
 
 		assertEquals(5, videos.size());
 	}
+
+	@Test
+	public void listByHashtagWrongHashtag() {
+		User user = new User();
+		user.setUsername("user");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("video1");
+		video.setUser(user);
+		videoRepo.save(video);
+		
+		
+		
+		Hashtag hashtag = new Hashtag();
+		hashtag.setName("hashtag");
+		Set<Video> videoSet = new HashSet<Video>();
+		videoSet.add(video);
+		hashtag.setVideos(videoSet);
+		hashtagRepo.save(hashtag);
+		
+		Iterable<Video> videos = client.ListByHashtag(hashtag.getId() + 1);
+		
+		assertNull(videos);
+	}
 	
-//	@Test
-//	public void listByHashtagWrongHashtag() {
-//		User user = new User();
-//		user.setUsername("user");
-//		userRepo.save(user);
-//		
-//		Video video = new Video();
-//		video.setTitle("video1");
-//		video.setUser(user);
-//		videoRepo.save(video);
-//		
-//		
-//		
-//		Hashtag hashtag = new Hashtag();
-//		hashtag.setName("hashtag");
-//		Set<Video> videoSet = new HashSet<Video>();
-//		videoSet.add(video);
-//		hashtag.setVideos(videoSet);
-//		hashtagRepo.save(hashtag);
-//		
-//		Iterable<Video> videos = client.ListByHashtag(hashtag.getId() + 1);
-//		
-//		assertNull(videos);
-//	}
-//	
-//	@Test
-//	public void listByHashtag1Video() {
-//		User user = new User();
-//		user.setUsername("user");
-//		userRepo.save(user);
-//		
-//		Set<Video> videoSet = new HashSet<Video>();
-//		Video video = new Video();
-//		video.setTitle("video");
-//		video.setUser(user);
-//		videoRepo.save(video);
-//		videoSet.add(video);
-//		
-//		Hashtag hashtag = new Hashtag();
-//		hashtag.setName("hashtag");
-//		hashtag.setVideos(videoSet);
-//		hashtagRepo.save(hashtag);
-//		
-//		List<Video> videos = iterableToList(client.ListByHashtag(hashtag.getId()));
-//
-//		assertEquals(1, videos.size());
-//	}
-//	
-//	@Test
-//	public void listByHashtagMultipleVideo() {
-//		User user = new User();
-//		user.setUsername("user");
-//		userRepo.save(user);
-//		
-//		Set<Video> videoSet = new HashSet<Video>();
-//		for(int i = 0; i < 5; i++) {
-//			Video video = new Video();
-//			video.setTitle("video");
-//			video.setUser(user);
-//			videoRepo.save(video);
-//			videoSet.add(video);
-//		}
-//		
-//		Hashtag hashtag = new Hashtag();
-//		hashtag.setName("hashtag");
-//		hashtag.setVideos(videoSet);
-//		hashtagRepo.save(hashtag);
-//		
-//		List<Video> videos = iterableToList(client.ListByHashtag(hashtag.getId()));
-//
-//		assertEquals(5, videos.size());
-//	}
-//	
-//
-//	@Test
-//	public void listByHashtagMultipleHashtag() {
-//		User user = new User();
-//		user.setUsername("user");
-//		userRepo.save(user);
-//		
-//		Set<Video> videoSet = new HashSet<Video>();
-//		for(int i = 0; i < 5; i++) {
-//			Video video = new Video();
-//			video.setTitle("video");
-//			video.setUser(user);
-//			videoRepo.save(video);
-//			videoSet.add(video);
-//		}
-//		
-//		Hashtag hashtag = new Hashtag();
-//		hashtag.setName("hashtag1");
-//		hashtag.setVideos(videoSet);
-//		hashtagRepo.save(hashtag);
-//		
-//		videoSet = new HashSet<Video>();
-//		for(int i = 0; i < 5; i++) {
-//			Video video = new Video();
-//			video.setTitle("video");
-//			video.setUser(user);
-//			videoRepo.save(video);
-//			videoSet.add(video);
-//		}
-//		
-//		Hashtag hashtag2 = new Hashtag();
-//		hashtag2.setName("hashtag2");
-//		hashtag2.setVideos(videoSet);
-//		hashtagRepo.save(hashtag2);
-//		
-//		List<Video> videos = iterableToList(client.ListByHashtag(hashtag.getId()));
-//
-//		assertEquals(5, videos.size());
-//	}
+	@Test
+	public void listByHashtag1Video() {
+		User user = new User();
+		user.setUsername("user");
+		userRepo.save(user);
+		
+		Set<Video> videoSet = new HashSet<Video>();
+		Video video = new Video();
+		video.setTitle("video");
+		video.setUser(user);
+		videoRepo.save(video);
+		videoSet.add(video);
+		
+		Hashtag hashtag = new Hashtag();
+		hashtag.setName("hashtag");
+		hashtag.setVideos(videoSet);
+		hashtagRepo.save(hashtag);
+		
+		List<Video> videos = iterableToList(client.ListByHashtag(hashtag.getId()));
+
+		assertEquals(1, videos.size());
+	}
+	
+	@Test
+	public void listByHashtagMultipleVideo() {
+		User user = new User();
+		user.setUsername("user");
+		userRepo.save(user);
+		
+		Set<Video> videoSet = new HashSet<Video>();
+		for(int i = 0; i < 5; i++) {
+			Video video = new Video();
+			video.setTitle("video");
+			video.setUser(user);
+			videoRepo.save(video);
+			videoSet.add(video);
+		}
+		
+		Hashtag hashtag = new Hashtag();
+		hashtag.setName("hashtag");
+		hashtag.setVideos(videoSet);
+		hashtagRepo.save(hashtag);
+		
+		List<Video> videos = iterableToList(client.ListByHashtag(hashtag.getId()));
+
+		assertEquals(5, videos.size());
+	}
+	
+
+	@Test
+	public void listByHashtagMultipleHashtag() {
+		User user = new User();
+		user.setUsername("user");
+		userRepo.save(user);
+		
+		Set<Video> videoSet = new HashSet<Video>();
+		for(int i = 0; i < 5; i++) {
+			Video video = new Video();
+			video.setTitle("video");
+			video.setUser(user);
+			videoRepo.save(video);
+			videoSet.add(video);
+		}
+		
+		Hashtag hashtag = new Hashtag();
+		hashtag.setName("hashtag1");
+		hashtag.setVideos(videoSet);
+		hashtagRepo.save(hashtag);
+		
+		videoSet = new HashSet<Video>();
+		for(int i = 0; i < 5; i++) {
+			Video video = new Video();
+			video.setTitle("video");
+			video.setUser(user);
+			videoRepo.save(video);
+			videoSet.add(video);
+		}
+		
+		Hashtag hashtag2 = new Hashtag();
+		hashtag2.setName("hashtag2");
+		hashtag2.setVideos(videoSet);
+		hashtagRepo.save(hashtag2);
+		
+		List<Video> videos = iterableToList(client.ListByHashtag(hashtag.getId()));
+
+		assertEquals(5, videos.size());
+	}
 	
 	private <T> List<T> iterableToList(Iterable<T> iterable) {
 		List<T> l = new ArrayList<>();

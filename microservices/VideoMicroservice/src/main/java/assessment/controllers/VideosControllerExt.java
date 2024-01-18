@@ -1,7 +1,15 @@
 package assessment.controllers;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -15,7 +23,7 @@ import assessment.dto.VideoDTO;
 
 @Controller("/video")
 public class VideosControllerExt extends VideosController{
-
+	
 	@Override	
 	@Get("/")
 	public Iterable<Video> ListVideos() {
@@ -23,6 +31,7 @@ public class VideosControllerExt extends VideosController{
 	}
 
 	@Override
+	@Transactional
 	@Post("/{userId}")
 	public HttpResponse<String> AddVideo(long userId, @Body VideoDTO details) {
 		Optional<User> oUser = userRepo.findById(userId);
@@ -34,8 +43,14 @@ public class VideosControllerExt extends VideosController{
 		Video video = new Video();
 		video.setTitle(details.getTitle());
 		video.setUser(user);
-
 		videoRepo.save(video);
+
+		Set<Video> videos = user.getVideos();
+		if (videos == null) {
+			videos = new HashSet<Video>();
+		}
+		videos.add(video);
+		userRepo.update(user);
 		
 		producer.VideoAdded(video.getId(), video);
 
@@ -65,6 +80,7 @@ public class VideosControllerExt extends VideosController{
 	}
 
 	@Override
+	@Transactional
 	@Get("/user/{userId}")
 	public Iterable<Video> ListByUser(Long userId) {
 		Optional<User> oUser = userRepo.findById(userId);
@@ -73,7 +89,6 @@ public class VideosControllerExt extends VideosController{
 		}
 
 		User user = oUser.get();
-		
 		return user.getVideos();
 	}
 

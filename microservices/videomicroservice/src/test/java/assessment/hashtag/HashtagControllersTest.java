@@ -95,24 +95,87 @@ public class HashtagControllersTest {
 
 	@Test
 	public void addHashtag() {
-		User tempUser = new User();
-		tempUser.setUsername("name");
-		Video tempVideo = new Video();
-		tempVideo.setTitle("title");
-		userRepo.save(tempUser);
-		tempVideo.setUser(tempUser);
-		videoRepo.save(tempVideo);
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
 		
-		final String HashtagName = "Container Security";
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+		
 		HashtagDTO hashtag = new HashtagDTO();
-		hashtag.setName(HashtagName);
+		hashtag.setName("hashtag");
 	
-		HttpResponse<String> response = client.AddHashtag(tempVideo.getId(), hashtag);
+		HttpResponse<String> response = client.AddHashtag(video.getId(), hashtag);
 		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");
 
 		List<Hashtag> hashtags = iterableToList(client.ListHashtags());
 		assertEquals(1, hashtags.size());
-		assertEquals(HashtagName, hashtags.get(0).getName());
+		assertEquals("hashtag", hashtags.get(0).getName());
+	}
+	
+	@Test
+	public void addHashtagWrongVideo() {
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+		
+		HashtagDTO hashtag = new HashtagDTO();
+		hashtag.setName("hashtag");
+	
+		HttpResponse<String> response = client.AddHashtag(video.getId() + 1, hashtag);
+		assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+	}
+	
+	@Test
+	public void addHashtagSameHashtag() {
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+		
+		HashtagDTO hashtag = new HashtagDTO();
+		hashtag.setName("hashtag");
+		client.AddHashtag(video.getId(), hashtag);
+		HttpResponse<String> response = client.AddHashtag(video.getId(), hashtag);
+		assertEquals(HttpStatus.OK, response.getStatus(), "Update should be successful");
+
+		List<Hashtag> hashtags = iterableToList(client.ListHashtags());
+		assertEquals(1, hashtags.size());
+	}
+	
+	@Test
+	public void addHashtagDifferentHashtag() {
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+		
+		HashtagDTO hashtag = new HashtagDTO();
+		hashtag.setName("hashtag");
+		client.AddHashtag(video.getId(), hashtag);
+		
+
+		hashtag.setName("hashtag2");
+		HttpResponse<String> response = client.AddHashtag(video.getId(), hashtag);
+		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");
+
+		List<Hashtag> hashtags = iterableToList(client.ListHashtags());
+		assertEquals(2, hashtags.size());
 	}
 	
 	private <T> List<T> iterableToList(Iterable<T> iterable) {

@@ -37,7 +37,7 @@ public class User {
 	
 	@JsonIgnore
 	/* protected region validate-body on begin */
-	@OneToMany(mappedBy="user")
+	@OneToMany
 	private Set<Video> videos;
 	/* protected region validate-body end */
 	

@@ -15,7 +15,9 @@ import assessment.dto.HashtagDTO;
 public interface HashtagRepository extends CrudRepository<Hashtag, Long> {
 
 	/* protected region validate-body on begin */
-
+	@Join(value = "videos", type = Join.Type.LEFT_FETCH)
+	@Override
+	Optional<Hashtag> findById(@NotNull Long id);
 	/* protected region validate-body end */
 	
 	Optional<HashtagDTO> findOne(long id);

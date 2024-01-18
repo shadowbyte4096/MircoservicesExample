@@ -15,7 +15,9 @@ import assessment.dto.UserDTO;
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	/* protected region validate-body on begin */
-
+	@Join(value = "videos", type = Join.Type.LEFT_FETCH)
+	@Override
+	Optional<User> findById(@NotNull Long id);
 	/* protected region validate-body end */
 	
 	Optional<UserDTO> findOne(long id);

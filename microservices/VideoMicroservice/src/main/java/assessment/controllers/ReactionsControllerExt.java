@@ -79,6 +79,7 @@ public class ReactionsControllerExt extends ReactionsController{
 	}
 	
 	@Override
+	@Transactional
 	@Post("/{videoId}/{userId}")
 	public HttpResponse<String> AddReaction(long videoId, long userId, @Body ReactionDTO details) {
 		Reaction reaction = new Reaction();
