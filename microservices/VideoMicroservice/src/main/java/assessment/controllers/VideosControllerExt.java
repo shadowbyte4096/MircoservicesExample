@@ -69,8 +69,7 @@ public class VideosControllerExt extends VideosController{
 	public Iterable<Video> ListByUser(Long userId) {
 		Optional<User> oUser = userRepo.findById(userId);
 		if (oUser.isEmpty()) {
-			Iterable<Video> empty = null;
-			return empty;
+			return null;
 		}
 
 		User user = oUser.get();
@@ -83,8 +82,7 @@ public class VideosControllerExt extends VideosController{
 	public Iterable<Video> ListByHashtag(Long hashtagId) {
 		Optional<Hashtag> oHashtag = hashtagRepo.findById(hashtagId);
 		if (oHashtag.isEmpty()) {
-			Iterable<Video> empty = null;
-			return empty;
+			return null;
 		}
 
 		Hashtag hashtag = oHashtag.get();
