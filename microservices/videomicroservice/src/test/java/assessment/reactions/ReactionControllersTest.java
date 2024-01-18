@@ -146,54 +146,54 @@ public class ReactionControllersTest {
 		assertEquals(1, reactions.get(0).getReaction());
 	}
 	
-//	@Test
-//	public void addDislikedReaction() {
-//		User user = new User();
-//		user.setUsername("name");
-//		userRepo.save(user);
-//		
-//		Video video = new Video();
-//		video.setTitle("title");
-//		video.setUser(user);
-//		videoRepo.save(video);
-//		
-//		ReactionDTO reaction = new ReactionDTO();
-//		reaction.setReaction(-1);
-//		HttpResponse<String> response = client.AddReaction(video.getId(), user.getId(), reaction);
-//		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");
-//		
-//		List<Reaction> reactions = iterableToList(reactionRepo.findAll());
-//		assertEquals(1, reactions.size());
-//		assertEquals(-1, reactions.get(0).getReaction());
-//	}
-//	
-//	@Test
-//	public void addLikedReactionHasHashtag() {
-//		User user = new User();
-//		user.setUsername("name");
-//		userRepo.save(user);
-//		
-//		Video video = new Video();
-//		video.setTitle("title");
-//		video.setUser(user);
-//		videoRepo.save(video);
-//		
-//		Hashtag hashtag = new Hashtag();
-//		hashtag.setName("hashtag");
-//		Set<Video> videos = new HashSet<Video>();
-//		videos.add(video);
-//		hashtag.setVideos(videos);
-//		hashtagRepo.save(hashtag);
-//		
-//		ReactionDTO reaction = new ReactionDTO();
-//		reaction.setReaction(1);
-//		HttpResponse<String> response = client.AddReaction(video.getId(), user.getId(), reaction);
-//		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");
-//		
-//		List<Reaction> reactions = iterableToList(reactionRepo.findAll());
-//		assertEquals(1, reactions.size());
-//		assertEquals(1, reactions.get(0).getReaction());
-//	}
+	@Test
+	public void addDislikedReaction() {
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+		
+		ReactionDTO reaction = new ReactionDTO();
+		reaction.setReaction(-1);
+		HttpResponse<String> response = client.AddReaction(video.getId(), user.getId(), reaction);
+		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");
+		
+		List<Reaction> reactions = iterableToList(reactionRepo.findAll());
+		assertEquals(1, reactions.size());
+		assertEquals(-1, reactions.get(0).getReaction());
+	}
+	
+	@Test
+	public void addLikedReactionHasHashtag() {
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+		
+		Hashtag hashtag = new Hashtag();
+		hashtag.setName("hashtag");
+		Set<Video> videos = new HashSet<Video>();
+		videos.add(video);
+		hashtag.setVideos(videos);
+		hashtagRepo.save(hashtag);
+		
+		ReactionDTO reaction = new ReactionDTO();
+		reaction.setReaction(1);
+		HttpResponse<String> response = client.AddReaction(video.getId(), user.getId(), reaction);
+		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");
+		
+		List<Reaction> reactions = iterableToList(reactionRepo.findAll());
+		assertEquals(1, reactions.size());
+		assertEquals(1, reactions.get(0).getReaction());
+	}
 
 	@Test
 	public void GetReaction() {
@@ -277,32 +277,114 @@ public class ReactionControllersTest {
 		assertEquals(newReaction, reactions.get(0).getReaction());
 	}
 	
-//	@Test
-//	public void UpdateReactionWrongUser() {
-//		User user = new User();
-//		user.setUsername("name");
-//		userRepo.save(user);
-//		
-//		Video video = new Video();
-//		video.setTitle("title");
-//		video.setUser(user);
-//		videoRepo.save(video);
-//
-//		ReactionDTO reaction = new ReactionDTO();
-//		reaction.setReaction(0);
-//		client.AddReaction(video.getId(), user.getId(), reaction);
-//		
-//		int newReaction = 1;
-//		ReactionDTO dto = new ReactionDTO();
-//		dto.setReaction(newReaction);
-//		
-//		HttpResponse<String> response = client.UpdateReaction(video.getId(), user.getId(), dto);
-//		assertEquals(HttpStatus.OK, response.getStatus(), "Update should be successful");
-//		
-//		List<Reaction> reactions = iterableToList(reactionRepo.findAll());
-//		assertEquals(1, reactions.size());
-//		assertEquals(newReaction, reactions.get(0).getReaction());
-//	}
+	@Test
+	public void UpdateReactionWrongUser() {
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+
+		ReactionDTO reaction = new ReactionDTO();
+		reaction.setReaction(0);
+		client.AddReaction(video.getId(), user.getId(), reaction);
+		
+		int newReaction = 1;
+		ReactionDTO dto = new ReactionDTO();
+		dto.setReaction(newReaction);
+		
+		HttpResponse<String> response = client.UpdateReaction(video.getId(), user.getId() + 1, dto);
+		assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+	}
+	
+	@Test
+	public void UpdateReactionWrongVideo() {
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+
+		ReactionDTO reaction = new ReactionDTO();
+		reaction.setReaction(0);
+		client.AddReaction(video.getId(), user.getId(), reaction);
+		
+		int newReaction = 1;
+		ReactionDTO dto = new ReactionDTO();
+		dto.setReaction(newReaction);
+		
+		HttpResponse<String> response = client.UpdateReaction(video.getId() + 1, user.getId(), dto);
+		assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+	}
+	
+
+	@Test
+	public void UpdateReactionUnchanged() {
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+
+		ReactionDTO reaction = new ReactionDTO();
+		reaction.setReaction(0);
+		client.AddReaction(video.getId(), user.getId(), reaction);
+		
+		int newReaction = 0;
+		ReactionDTO dto = new ReactionDTO();
+		dto.setReaction(newReaction);
+		
+		HttpResponse<String> response = client.UpdateReaction(video.getId(), user.getId(), dto);
+		assertEquals(HttpStatus.OK, response.getStatus());
+		
+		List<Reaction> reactions = iterableToList(reactionRepo.findAll());
+		assertEquals(1, reactions.size());
+		assertEquals(newReaction, reactions.get(0).getReaction());
+	}
+	
+
+	@Test
+	public void UpdateReactionHasHashtag() {
+		User user = new User();
+		user.setUsername("name");
+		userRepo.save(user);
+		
+		Video video = new Video();
+		video.setTitle("title");
+		video.setUser(user);
+		videoRepo.save(video);
+
+		ReactionDTO reaction = new ReactionDTO();
+		reaction.setReaction(0);
+		client.AddReaction(video.getId(), user.getId(), reaction);
+		
+		Hashtag hashtag = new Hashtag();
+		hashtag.setName("hashtag");
+		Set<Video> videos = new HashSet<Video>();
+		videos.add(video);
+		hashtag.setVideos(videos);
+		hashtagRepo.save(hashtag);
+		
+		int newReaction = 1;
+		ReactionDTO dto = new ReactionDTO();
+		dto.setReaction(newReaction);
+		
+		HttpResponse<String> response = client.UpdateReaction(video.getId(), user.getId(), dto);
+		assertEquals(HttpStatus.OK, response.getStatus());
+		
+		List<Reaction> reactions = iterableToList(reactionRepo.findAll());
+		assertEquals(1, reactions.size());
+		assertEquals(newReaction, reactions.get(0).getReaction());
+	}
 	
 	private <T> List<T> iterableToList(Iterable<T> iterable) {
 		List<T> l = new ArrayList<>();
