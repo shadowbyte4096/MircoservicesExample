@@ -3,12 +3,10 @@ package assessment.events;
 import io.micronaut.configuration.kafka.annotation.KafkaKey;
 import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
-import io.micronaut.http.HttpResponse;
 import jakarta.inject.Inject;
 import assessment.domain.User;
 import assessment.domain.Video;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -46,7 +44,8 @@ public class ConsumersExt extends Consumers{
 		hashtag.setName(hashtagDTO.getName());
 		Optional<Video> oVideo = videoRepo.findById(id);
 		if (oVideo.isEmpty()) {
-			//Oh no
+			//oh No
+			return;
 		}
 		Video video = oVideo.get();
 		

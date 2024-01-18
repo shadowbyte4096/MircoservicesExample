@@ -3,14 +3,8 @@ package assessment.videos;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -18,14 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import assessment.domain.Video;
-import assessment.domain.Reaction;
 import assessment.domain.User;
 import assessment.dto.VideoDTO;
-import assessment.events.Producers;
 import assessment.repositories.VideoRepository;
 import assessment.repositories.ReactionRepository;
 import assessment.repositories.UserRepository;
@@ -55,12 +46,12 @@ public class VideoControllersTest {
 	 * We mock the Kafka producer here, so we can just test that it's called,
 	 * rather than actually checking if the event fully went through.
 	 */
-	//private final Map<Long, User> watchedVideos = new HashMap<>();
+	private final Map<Long, Video> addedVideos = new HashMap<>();
 
-//	@MockBean(VideosProducer.class)
-//	VideosProducer testProducer() {
-//		return (key, value) -> { watchedVideos.put(key,  value); };
-//	}
+	@MockBean(Producers.class)
+	Producers testProducer() {
+		return (key, value) -> { /* record event */ };
+	}
 
 	@BeforeEach
 	public void clean() {
@@ -82,7 +73,6 @@ public class VideoControllersTest {
 		video.setTitle(videoTitle);
 		User temp = new User();
 		temp.setUsername("user");
-		logger.debug(temp.getId().toString());
 		userRepo.save(temp);
 		HttpResponse<String> response = client.AddVideo(temp.getId(), video);
 		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");

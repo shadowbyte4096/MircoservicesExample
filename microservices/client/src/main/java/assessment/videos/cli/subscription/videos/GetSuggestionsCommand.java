@@ -1,8 +1,6 @@
 package assessment.videos.cli.subscription.videos;
 
 import assessment.videos.cli.dto.HashtagDTO;
-import io.micronaut.http.HttpResponse;
-import assessment.videos.cli.domain.Hashtag;
 import assessment.videos.cli.domain.Video;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Command;

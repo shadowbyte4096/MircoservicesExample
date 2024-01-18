@@ -1,16 +1,16 @@
-package assessment.videos.cli.subscription.users;
+package assessmnet.subscriptions;
 
-import assessment.videos.cli.domain.Hashtag;
-import assessment.videos.cli.dto.HashtagDTO;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.client.annotation.Client;
+import assessment.dto.HashtagDTO;
+import assessment.domain.Hashtag;
 
-@Client("${users.url:`http://localhost:8082/user`}")
-public interface UsersClient {
+@Client("/user")
+public interface SubscriptionsClient {
 	
 	@Get("/{id}")
 	Iterable<Hashtag> ListSubscriptions(long id);
@@ -20,4 +20,5 @@ public interface UsersClient {
 	
 	@Delete("/{userId}")
 	HttpResponse<String> DeleteSubscription(long userId, @Body HashtagDTO details);
+
 }

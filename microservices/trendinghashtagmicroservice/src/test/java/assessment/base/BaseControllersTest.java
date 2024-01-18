@@ -34,7 +34,7 @@ public class BaseControllersTest {
 
 	@Test
 	public void healthCheck() {
-		HttpResponse<Void> response = client.GetVideoMicroserviceHealth();
+		HttpResponse<Void> response = client.GetTrendingHashtagMicroserviceHealth();
 		assertEquals(HttpStatus.OK, response.getStatus());
 	}
 }

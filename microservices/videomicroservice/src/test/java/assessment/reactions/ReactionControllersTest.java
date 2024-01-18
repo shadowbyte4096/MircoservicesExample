@@ -1,14 +1,8 @@
-package assessment.hashtag;
+package assessment.reactions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -19,11 +13,10 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import assessment.domain.Video;
-import assessment.domain.Hashtag;
+import assessment.domain.Reaction;
 import assessment.domain.User;
-import assessment.dto.HashtagDTO;
+import assessment.dto.ReactionDTO;
 import assessment.repositories.VideoRepository;
-import assessment.repositories.HashtagRepository;
 import assessment.repositories.ReactionRepository;
 import assessment.repositories.UserRepository;
 
@@ -32,24 +25,21 @@ import assessment.repositories.UserRepository;
  * able to see changes made by the test.
  */
 @MicronautTest(transactional = false, environments = "no_streams")
-public class HashtagControllersTest {
+public class ReactionControllersTest {
 
 	private static Logger logger = LoggerFactory.getLogger("testLogger");
 	
 	@Inject
-	HashtagClient client;
+	ReactionsClient client;
 
 	@Inject
 	VideoRepository videoRepo;
-	
-	@Inject
-	HashtagRepository hashtagRepo;
 
 	@Inject
 	UserRepository userRepo;
 	
 	@Inject
-	ReactionRepository reacitonRepo;
+	ReactionRepository reactionRepo;
 
 	/*
 	 * We mock the Kafka producer here, so we can just test that it's called,
@@ -58,19 +48,13 @@ public class HashtagControllersTest {
 
 	@BeforeEach
 	public void clean() {
-		hashtagRepo.deleteAll();
+		reactionRepo.deleteAll();
 		videoRepo.deleteAll();
 		userRepo.deleteAll();
 	}
 
 	@Test
-	public void noHashtag() {
-		Iterable<Hashtag> iterVideos = client.ListHashtags();
-		assertFalse(iterVideos.iterator().hasNext(), "Service should not list any hashtags initially");
-	}
-	
-	@Test
-	public void hasHashtag() {
+	public void addReaction() {
 		User tempUser = new User();
 		tempUser.setUsername("name");
 		Video tempVideo = new Video();
@@ -79,40 +63,58 @@ public class HashtagControllersTest {
 		tempVideo.setUser(tempUser);
 		videoRepo.save(tempVideo);
 		
-		Hashtag hashtag = new Hashtag();
-		hashtag.setName("hashtag");
-		Set<Video> videos = hashtag.getVideos();
-		if (videos == null) {
-			videos = new HashSet<Video>();
-		}
-		videos.add(tempVideo);
-		hashtag.setVideos(videos);
-		hashtagRepo.save(hashtag);
-		
-		Iterable<Hashtag> iterVideos = client.ListHashtags();
-		assertTrue(iterVideos.iterator().hasNext());
-	}
-
-	@Test
-	public void addHashtag() {
-		User tempUser = new User();
-		tempUser.setUsername("name");
-		Video tempVideo = new Video();
-		tempVideo.setTitle("title");
-		userRepo.save(tempUser);
-		tempVideo.setUser(tempUser);
-		videoRepo.save(tempVideo);
-		
-		final String HashtagName = "Container Security";
-		HashtagDTO hashtag = new HashtagDTO();
-		hashtag.setName(HashtagName);
-	
-		HttpResponse<String> response = client.AddHashtag(tempVideo.getId(), hashtag);
+		ReactionDTO reaction = new ReactionDTO();
+		reaction.setReaction(0);
+		HttpResponse<String> response = client.AddReaction(tempVideo.getId(), tempUser.getId(), reaction);
 		assertEquals(HttpStatus.CREATED, response.getStatus(), "Update should be successful");
+		
+		List<Reaction> reactions = iterableToList(reactionRepo.findAll());
+		assertEquals(1, reactions.size());
+		assertEquals(0, reactions.get(0).getReaction());
+	}
 
-		List<Hashtag> hashtags = iterableToList(client.ListHashtags());
-		assertEquals(1, hashtags.size());
-		assertEquals(HashtagName, hashtags.get(0).getName());
+	@Test
+	public void GetReaction() {
+		User tempUser = new User();
+		tempUser.setUsername("name");
+		Video tempVideo = new Video();
+		tempVideo.setTitle("title");
+		userRepo.save(tempUser);
+		tempVideo.setUser(tempUser);
+		videoRepo.save(tempVideo);
+		
+		ReactionDTO reaction = new ReactionDTO();
+		reaction.setReaction(0);
+		client.AddReaction(tempVideo.getId(), tempUser.getId(), reaction);
+		Reaction result = client.GetReaction(tempVideo.getId(), tempUser.getId());
+		
+		assertEquals(result.getReaction(), reaction.getReaction());
+	}
+	
+	@Test
+	public void UpdateReaction() {
+		User tempUser = new User();
+		tempUser.setUsername("name");
+		Video tempVideo = new Video();
+		tempVideo.setTitle("title");
+		userRepo.save(tempUser);
+		tempVideo.setUser(tempUser);
+		videoRepo.save(tempVideo);
+
+		ReactionDTO reaction = new ReactionDTO();
+		reaction.setReaction(0);
+		client.AddReaction(tempVideo.getId(), tempUser.getId(), reaction);
+		
+		int newReaction = 1;
+		ReactionDTO dto = new ReactionDTO();
+		dto.setReaction(newReaction);
+		
+		HttpResponse<String> response = client.UpdateReaction(tempVideo.getId(), tempUser.getId(), dto);
+		assertEquals(HttpStatus.OK, response.getStatus(), "Update should be successful");
+		
+		List<Reaction> reactions = iterableToList(reactionRepo.findAll());
+		assertEquals(1, reactions.size());
+		assertEquals(newReaction, reactions.get(0).getReaction());
 	}
 	
 	private <T> List<T> iterableToList(Iterable<T> iterable) {

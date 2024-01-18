@@ -3,28 +3,17 @@ package assessment.users;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
-import assessment.domain.Video;
-import assessment.domain.Reaction;
 import assessment.domain.User;
 import assessment.dto.UserDTO;
-import assessment.dto.VideoDTO;
-import assessment.events.Producers;
 import assessment.repositories.VideoRepository;
 import assessment.repositories.ReactionRepository;
 import assessment.repositories.UserRepository;

@@ -1,7 +1,6 @@
 package assessment.videos.cli.video.videos;
 
 import assessment.videos.cli.dto.VideoDTO;
-import io.micronaut.http.HttpResponse;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;

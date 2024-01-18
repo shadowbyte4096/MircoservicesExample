@@ -1,13 +1,12 @@
 package assessment.videos.cli.subscription.users;
 
 import assessment.videos.cli.dto.HashtagDTO;
-import assessment.videos.cli.dto.UserDTO;
 import io.micronaut.http.HttpResponse;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-@Command(name="unsubscribe-to-video", description="Deletes a subscription", mixinStandardHelpOptions = true)
+@Command(name="unsubscribe", description="Deletes a subscription", mixinStandardHelpOptions = true)
 public class DeleteSubscriptionCommand implements Runnable {
 
 	@Inject

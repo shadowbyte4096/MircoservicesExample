@@ -1,9 +1,6 @@
 package assessment.videos.cli.video.reactions;
 
-import assessment.videos.cli.domain.User;
-import assessment.videos.cli.dto.ReactionDTO;
-import assessment.videos.cli.dto.VideoDTO;
-import assessment.videos.cli.video.videos.VideosClient;
+import assessment.videos.cli.domain.Reaction;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -15,11 +12,14 @@ public class GetReactionCommand implements Runnable {
 	private ReactionsClient client;
 
 	@Parameters(index="0")
-	private Long id;
+	private Long videoId;
+
+	@Parameters(index="1")
+	private Long userId;
 
 	@Override
 	public void run() {
-		ReactionDTO reaction = client.GetReaction(id);
+		Reaction reaction = client.GetReaction(videoId, userId);
 		if (reaction == null) {
 			System.err.println("Reaction not found!");
 		} else {

@@ -7,7 +7,7 @@ import io.micronaut.http.client.annotation.Client;
 @Client("/")
 public interface BaseClient {
 	
-	@Get("/VideoMicroservice/")
-	HttpResponse<Void> GetVideoMicroserviceHealth();
+	@Get("/SubscriptionMicroservice/")
+	HttpResponse<Void> GetSubscriptionMicroserviceHealth();
 
 }

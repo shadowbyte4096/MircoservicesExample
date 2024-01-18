@@ -1,11 +1,9 @@
 package assessment.videos.cli.video.reactions;
 
 import assessment.videos.cli.dto.ReactionDTO;
-import assessment.videos.cli.dto.VideoDTO;
 import io.micronaut.http.HttpResponse;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 @Command(name="react-to-video", description="Adds or updates a reaction to a video", mixinStandardHelpOptions = true)

@@ -48,6 +48,10 @@ micronaut {
 }
 
 test {
+	testLogging {
+		       //events "PASSED", "SKIPPED", "FAILED"
+		       showStandardStreams = true
+		   }
     // report is always generated after tests run
     finalizedBy jacocoTestReport
 }
