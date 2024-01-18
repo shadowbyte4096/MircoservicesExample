@@ -98,8 +98,9 @@ public class SubscriptionsControllersTest {
 		client.AddSubscription(1, hashtag);
 		HttpResponse<String> response = client.AddSubscription(2, hashtag);
 		assertEquals(HttpStatus.OK, response.getStatus(), "Update should be successful");
-
+		
 		List<Hashtag> hashtags = iterableToList(client.ListSubscriptions(1));
+		logger.debug("list");
 		assertEquals(1, hashtags.size());
 		assertEquals(hashtag.getName(), hashtags.get(0).getName());
 	}

@@ -27,7 +27,7 @@ public class User {
 	
 	@JsonIgnore
 	/* protected region validate-body on begin */
-	@OneToMany
+	@ManyToMany
 	private Set<Hashtag> hashtags;
 	/* protected region validate-body end */
 	
